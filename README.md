@@ -1,6 +1,6 @@
 # 🛡️ 保險智慧助理 (Insurance Assistance)
 
-基於 **Vue 3** (Web Server)、**TypeScript 三層式架構** (AP Server)、**MySQL 8.0+** 與意圖辨識 AI (Intent Classification AI) 的智慧保險助理系統。系統透過自然語言理解使用者需求，結合身分驗證與業務服務，提供即時保單查詢、理賠文件指引與線上理賠流程導引，前後端各自獨立容器化部署於 **GCP Cloud Run**。
+基於 **Vue 3** (Web Server)、**Express + TypeScript 三層式架構** (AP Server)、**Drizzle ORM**、**MySQL 8.0+** 與意圖辨識 AI (Vercel AI SDK) 的智慧保險助理系統。系統透過自然語言理解使用者需求，結合身分驗證與業務服務，提供即時保單查詢、理賠文件指引與線上理賠流程導引，前後端各自獨立容器化部署於 **GCP Cloud Run**。
 
 ---
 
@@ -58,7 +58,7 @@
             ▼                                                     ▼
 ┌──────────────────────────────┐              ┌──────────────────────────────┐
 │  Web Server (Frontend)       │              │  AP Server (Backend)         │
-│  - Vue 3 + Vite + TypeScript │              │  - Node.js + TypeScript      │
+│  - Vue 3 + Vite + TypeScript │              │  - Node.js + Express (TS)    │
 │  - Nginx Alpine Container    │              │  - 三層式架構 (Controller/   │
 │  - GCP Cloud Run (Service 1) │              │    Service/Repository)       │
 └──────────────────────────────┘              │  - GCP Cloud Run (Service 2) │
@@ -73,10 +73,11 @@
 ```
 
 - **Frontend (Web Server)**：Vue 3 + Vite + Pinia + Vue Router + TypeScript，以 Nginx 容器託管並部署於 GCP Cloud Run。
-- **Backend (AP Server)**：Node.js + TypeScript，採用嚴格三層式架構，套件管理統一使用 **pnpm**。
+- **Backend (AP Server)**：Node.js + Express + TypeScript，採用嚴格三層式架構，套件管理統一使用 **pnpm**。
+- **ORM & Data Access**：Drizzle ORM (`drizzle-orm`, `mysql2`)，透過 Type-Safe Query Builder 自動編譯 Prepared Statements，徹底防禦 SQL Injection。
 - **Database**：MySQL 8.0+（託管於 GCP Cloud SQL），所有 DDL/DML 版本控制皆收錄於專案 `db/` 目錄。
 - **Authentication**：Better Auth，處理 Session 驗證並取得 `userId`。
-- **AI Engine**：Intent Classification AI，負責理解使用者對話並分類意圖。
+- **AI Engine**：Intent Classification AI（基於 Vercel AI SDK 與 Gemini LLM），負責理解使用者對話並分類意圖。
 - **Deployment & Cloud**：GCP Cloud Run + GCP Cloud SQL (MySQL) + GCP Secret Manager。
 
 ### 後端三層式架構
@@ -86,8 +87,8 @@
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │               1. 表現層 (Controller Layer)                   │
-│   - AssistantController / PolicyController / ClaimController │
-│   - 職責：HTTP 路由、Input Schema 驗證、Better Auth Session  │
+│   - Express Router / Controllers (Assistant, Policy, Claims) │
+│   - 職責：HTTP 路由分發、Zod 輸入驗證、Better Auth Session 認證 │
 └──────────────────────────────┬───────────────────────────────┘
                                │ 調用 Service (DTO / Context)
 ┌──────────────────────────────▼───────────────────────────────┐
@@ -95,13 +96,13 @@
 │   - UserPolicyService / ClaimService / IntentRouter          │
 │   - 職責：商業規則計算、AI 意圖調度、事務管理、模板渲染       │
 └──────────────────────────────┬───────────────────────────────┘
-                               │ 調用 Repository (參數化查詢)
+                               │ 調用 Repository (Type-Safe Query Builder)
 ┌──────────────────────────────▼───────────────────────────────┐
 │               3. 資料存取層 (Repository Layer)               │
 │   - UserInsuranceRepository / ClaimRequirementRepository     │
-│   - 職責：MySQL 8.0 SQL 查詢、資料庫連線池、Entity 映射      │
+│   - 職責：Drizzle ORM 查詢封裝 (自動參數化防 SQL 注入)、連線池 │
 └──────────────────────────────┬───────────────────────────────┘
-                               │ SQL (InnoDB / utf8mb4)
+                               │ Prepared Statements (MySQL 8.0+)
 ┌──────────────────────────────▼───────────────────────────────┐
 │                     Database (MySQL 8.0+)                    │
 └──────────────────────────────────────────────────────────────┘
@@ -281,16 +282,25 @@ erDiagram
 
 ```
 insuranceAssistance/
-├── backend/                  # 後端 AP Server (Node.js / TypeScript)
+├── backend/                  # 後端 AP Server (Express / TypeScript / Drizzle)
 │   ├── src/
-│   │   ├── config/           # 環境變數與 MySQL 連線池設定
+│   │   ├── config/           # 環境變數載入與驗證 (env.ts)
+│   │   ├── db/               # Drizzle ORM 連線與 Schema 定義
+│   │   │   ├── index.ts      # 資料庫連線實例 (drizzle client)
+│   │   │   └── schema/       # 資料表綱要 (users, insurance, user-insurance...)
+│   │   ├── routes/           # Express 路由模組層
 │   │   ├── controllers/      # 表現層 Controller (assistant, policy, claims)
 │   │   ├── services/         # 商業邏輯層 Service (UserPolicyService, ClaimService)
-│   │   ├── repositories/     # 資料存取層 Repository (MySQL 查詢)
+│   │   ├── repositories/     # 資料存取層 Repository (Drizzle ORM 防注入)
 │   │   ├── templates/        # 回應與動作模板 (Response & Action Templates)
-│   │   ├── ai/               # 意圖分類器與路由器 (Intent Classifier & Router)
-│   │   ├── middlewares/      # 認證 (Better Auth)、驗證與錯誤處理中介層
-│   │   └── models/           # DTO 與 Entity 型別定義
+│   │   ├── ai/               # 意圖分類器 (Vercel AI SDK) 與路由器 (Intent Router)
+│   │   ├── middlewares/      # 認證 (Better Auth)、Zod 驗證與全域錯誤攔截
+│   │   ├── models/           # DTO 型別定義
+│   │   ├── utils/            # AppError, ApiResponse, Logger
+│   │   ├── app.ts            # Express 應用設定與中介層掛載
+│   │   └── index.ts          # 伺服器啟動與優雅關機
+│   ├── tests/                # 單元測試與整合測試
+│   ├── drizzle.config.ts     # Drizzle Kit 設定檔
 │   ├── Dockerfile            # AP Server Multi-stage Dockerfile
 │   ├── package.json
 │   ├── pnpm-lock.yaml        # pnpm 依賴鎖定檔
@@ -316,7 +326,7 @@ insuranceAssistance/
 │   ├── devPrincipal/         # 團隊開發準則庫
 │   │   ├── README.md         # 開發準則總覽
 │   │   ├── 01-architecture.md# 系統與三層式架構規範
-│   │   ├── 02-backend.md     # 後端規範 (TypeScript & pnpm)
+│   │   ├── 02-backend.md     # 後端規範 (TypeScript, Express & Drizzle ORM)
 │   │   ├── 03-frontend.md    # 前端規範 (Vue 3)
 │   │   ├── 04-database.md    # 資料庫設計與版控規範 (MySQL)
 │   │   └── 05-deployment.md  # 容器化與 GCP Cloud Run 部署規範
@@ -359,6 +369,7 @@ mysql -h 127.0.0.1 -P 3306 -u app_backend -papp_secret insurance_db < db/dml/V00
 cd backend
 pnpm install
 pnpm dev
+# 若有 Schema 異動可執行：pnpm db:generate
 ```
 
 後端環境變數設定檔 (`backend/.env`)：
@@ -396,7 +407,7 @@ VITE_API_BASE_URL="http://localhost:8080"
 - **開發準則 (spec/devPrincipal)**：
   - [開發準則總覽](spec/devPrincipal/README.md)
   - [01. 系統架構與三層式設計準則](spec/devPrincipal/01-architecture.md)
-  - [02. 後端開發規範 (TypeScript & pnpm)](spec/devPrincipal/02-backend.md)
+  - [02. 後端開發規範 (TypeScript, Express & Drizzle ORM)](spec/devPrincipal/02-backend.md)
   - [03. 前端開發規範 (Vue 3)](spec/devPrincipal/03-frontend.md)
   - [04. 資料庫設計與版控規範 (MySQL & db/)](spec/devPrincipal/04-database.md)
   - [05. 容器化與 GCP Cloud Run 部署規範](spec/devPrincipal/05-deployment.md)

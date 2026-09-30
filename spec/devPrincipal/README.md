@@ -27,7 +27,7 @@
 | :--- | :--- | :--- |
 | **套件管理器** | `pnpm` (>= 9.x) | 前後端統一使用 pnpm，確保依賴解析快速且節省空間 |
 | **前端應用 (Web Server)** | Vue 3 + Vite + TypeScript | 響應式 SPA 介面、Pinia 狀態管理、Vue Router 路由控制 |
-| **後端服務 (AP Server)** | Node.js (LTS >= 20) + TypeScript | 三層式架構、RESTful API、Better Auth 認證、AI 意圖路由 |
+| **後端服務 (AP Server)** | Node.js (LTS >= 20) + Express + TypeScript | 三層式架構、RESTful API、Drizzle ORM、Better Auth 認證、AI 意圖路由 |
 | **資料庫系統** | MySQL (8.0+) | 關聯式資料庫，儲存保單、使用者資料與理賠規則 |
 | **資料庫版控** | SQL Script (`db/ddl`, `db/dml`) | 結構化遷移腳本版控，支援回溯與環境重建 |
 | **容器與部署** | Docker + GCP Cloud Run | 雙服務獨立容器化部屬，搭配 Cloud SQL (MySQL) |
@@ -41,7 +41,7 @@
 - [01. 系統架構與三層式設計準則](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/01-architecture.md)
   - Web Server 與 AP Server 分離設計
   - Controller-Service-Repository 三層職責劃分與資料流規範
-- [02. 後端開發規範 (TypeScript & pnpm)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/02-backend.md)
+- [02. 後端開發規範 (TypeScript, Express & Drizzle ORM)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/02-backend.md)
   - TypeScript 撰寫標準、專案目錄結構
   - RESTful API 設計、輸入驗證、統一回應與錯誤處理
 - [03. 前端開發規範 (Vue 3)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/03-frontend.md)
