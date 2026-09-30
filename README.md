@@ -372,6 +372,10 @@ pnpm dev
 # 若有 Schema 異動可執行：pnpm db:generate
 ```
 
+後端啟動後可開啟 Swagger UI 查看與測試 API：
+- **Swagger UI 介面**：`http://localhost:8080/api-docs`
+- **OpenAPI JSON 規格**：`http://localhost:8080/api-docs.json`
+
 後端環境變數設定檔 (`backend/.env`)：
 
 ```env

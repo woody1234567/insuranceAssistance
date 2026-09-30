@@ -8,13 +8,44 @@ import { errorHandler } from "./middlewares/error.middleware.js";
 import { requestLogger } from "./middlewares/logging.middleware.js";
 import { apiRouter } from "./routes/index.js";
 import { healthRouter } from "./routes/health.routes.js";
+import { swaggerRouter } from "./routes/swagger.routes.js";
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     tags:
+ *       - System
+ *     summary: 應用程式根路徑檢查
+ *     description: 回傳後端服務基礎資訊
+ *     responses:
+ *       200:
+ *         description: 成功取得服務資訊
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: insurance-assistance-backend
+ */
 export function createApp(): Express {
   const app = express();
 
   // Better Auth must receive the raw request before body parsers consume it.
   app.all("/api/auth/*splat", toNodeHandler(auth));
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   app.use(cors({
     origin: env.CORS_ORIGIN === "*" ? true : env.CORS_ORIGIN,
     credentials: true,
@@ -22,6 +53,8 @@ export function createApp(): Express {
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(requestLogger);
+
+  app.use(swaggerRouter);
 
   app.get("/", (_req: Request, res: Response) => {
     res.status(200).json({ success: true, data: { name: "insurance-assistance-backend" } });

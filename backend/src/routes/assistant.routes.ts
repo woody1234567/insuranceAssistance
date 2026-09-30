@@ -20,6 +20,61 @@ const assistantService = new AssistantService(
 const assistantController = new AssistantController(assistantService);
 const router = Router();
 
+/**
+ * @openapi
+ * /api/v1/assistant/message:
+ *   post:
+ *     tags:
+ *       - Assistant
+ *     summary: 發送諮詢訊息給 AI 助理
+ *     description: 透過 AI 意圖識別分析使用者輸入，並依據意圖查詢保單、理賠文件、發起理賠或回覆未知意圖。
+ *     security:
+ *       - cookieAuth: []
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AssistantMessageRequest'
+ *     responses:
+ *       200:
+ *         description: 成功取得 AI 助理回應
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   oneOf:
+ *                     - $ref: '#/components/schemas/PolicyResponseDTO'
+ *                     - $ref: '#/components/schemas/ClaimRequirementsResponseDTO'
+ *                     - $ref: '#/components/schemas/StartClaimResponseDTO'
+ *                     - $ref: '#/components/schemas/UnknownIntentResponseDTO'
+ *                 meta:
+ *                   $ref: '#/components/schemas/ApiSuccessMeta'
+ *       400:
+ *         description: 請求參數錯誤（如訊息為空）
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       401:
+ *         description: 尚未登入或認證無效
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       500:
+ *         description: 系統內部錯誤
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ */
 router.post("/assistant/message", requireAuth, assistantController.postMessage);
 
 export { router as assistantRouter };
