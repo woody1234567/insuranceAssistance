@@ -1,9 +1,20 @@
 -- ============================================================================
 -- Migration: V001__seed_initial_data.sql
--- Description: 插入系統初始保險商品與理賠文件規則種子資料 (MySQL 8.0+)
+-- Description: 插入系統初始使用者、保險商品、保單與理賠文件規則種子資料 (MySQL 8.0+)
 -- ============================================================================
 
--- 1. 插入基礎保險商品
+-- 1. 插入系統使用者
+INSERT INTO users (id, email, name) VALUES
+('00000000-0000-0000-0000-000000000001', 'wei.chen@example.com', '陳威廷'),
+('00000000-0000-0000-0000-000000000002', 'jane.lin@example.com', '林怡君'),
+('00000000-0000-0000-0000-000000000003', 'ming.huang@example.com', '黃志明'),
+('00000000-0000-0000-0000-000000000004', 'sarah.wang@example.com', '王雅婷'),
+('00000000-0000-0000-0000-000000000005', 'kevin.lee@example.com', '李冠廷')
+ON DUPLICATE KEY UPDATE
+    email = VALUES(email),
+    name = VALUES(name);
+
+-- 2. 插入基礎保險商品
 INSERT INTO insurance (id, code, name, type, description) VALUES
 ('INS-LIFE-001', 'LIFE_WHOLE_01', '安心終身壽險', 'LIFE', '提供全方位身故與完全失能保障，照顧家人未來生活。'),
 ('INS-HEALTH-001', 'HEALTH_HOSP_01', '守護醫療健康保險', 'HEALTH', '涵蓋住院日額、加護病房加倍給付與手術醫療保險金。'),
@@ -13,7 +24,23 @@ ON DUPLICATE KEY UPDATE
     type = VALUES(type),
     description = VALUES(description);
 
--- 2. 插入健康醫療險住院理賠所需文件
+-- 3. 插入使用者持有保單
+INSERT INTO user_insurance
+    (id, user_id, insurance_id, policy_number, status, start_date, end_date) VALUES
+('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', 'INS-LIFE-001', 'POL-LIFE-2025-0001', 'ACTIVE', '2025-01-01', '2045-12-31'),
+('10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001', 'INS-HEALTH-001', 'POL-HEALTH-2025-0001', 'ACTIVE', '2025-01-01', '2035-12-31'),
+('10000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002', 'INS-ACC-001', 'POL-ACC-2024-0001', 'ACTIVE', '2024-06-15', '2034-06-14'),
+('10000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000003', 'INS-HEALTH-001', 'POL-HEALTH-2023-0001', 'EXPIRED', '2023-03-01', '2026-02-28'),
+('10000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000004', 'INS-LIFE-001', 'POL-LIFE-2026-0001', 'ACTIVE', '2026-01-01', '2046-12-31'),
+('10000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000005', 'INS-ACC-001', 'POL-ACC-2025-0001', 'TERMINATED', '2025-05-01', '2035-04-30')
+ON DUPLICATE KEY UPDATE
+    user_id = VALUES(user_id),
+    insurance_id = VALUES(insurance_id),
+    status = VALUES(status),
+    start_date = VALUES(start_date),
+    end_date = VALUES(end_date);
+
+-- 4. 插入健康醫療險住院理賠所需文件
 INSERT INTO claim_requirements (id, insurance_id, claim_type, required_documents, notes) VALUES
 (
     'REQ-HEALTH-001',
