@@ -29,8 +29,8 @@ const router = Router();
  *     summary: 發送諮詢訊息給 AI 助理
  *     description: 透過 AI 意圖識別分析使用者輸入，並依據意圖查詢保單、理賠文件、發起理賠或回覆未知意圖。
  *     security:
- *       - cookieAuth: []
  *       - bearerAuth: []
+ *       - userIdHeader: []
  *     requestBody:
  *       required: true
  *       content:

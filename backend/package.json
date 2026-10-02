@@ -17,9 +17,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
-    "@ai-sdk/openai": "^4.0.82",
+    "@ai-sdk/google": "^4.0.87",
+    "@ai-sdk/google-vertex": "^5.0.101",
     "ai": "^7.0.123",
-    "better-auth": "^1.7.6",
     "cors": "^2.8.6",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",

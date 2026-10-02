@@ -27,7 +27,7 @@
 | :--- | :--- | :--- |
 | **套件管理器** | `pnpm` (>= 9.x) | 前後端統一使用 pnpm，確保依賴解析快速且節省空間 |
 | **前端應用 (Web Server)** | Vue 3 + Vite + TypeScript | 響應式 SPA 介面、Pinia 狀態管理、Vue Router 路由控制 |
-| **後端服務 (AP Server)** | Node.js (LTS >= 20) + Express + TypeScript | 三層式架構、RESTful API、Drizzle ORM、Better Auth 認證、AI 意圖路由 |
+| **後端服務 (AP Server)** | Node.js (LTS >= 20) + Express + TypeScript | 三層式架構、RESTful API、Drizzle ORM、AI 意圖路由 |
 | **資料庫系統** | MySQL (8.0+) | 關聯式資料庫，儲存保單、使用者資料與理賠規則 |
 | **資料庫版控** | SQL Script (`db/ddl`, `db/dml`) | 結構化遷移腳本版控，支援回溯與環境重建 |
 | **容器與部署** | Docker + GCP Cloud Run | 雙服務獨立容器化部屬，搭配 Cloud SQL (MySQL) |

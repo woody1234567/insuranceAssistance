@@ -20,8 +20,8 @@ const router = Router();
  *     summary: 查詢理賠所需文件與注意事項
  *     description: 依據理賠類型（例如：住院、意外、門診）查詢使用者持有保單對應所需檢附的證明文件與注意事項。
  *     security:
- *       - cookieAuth: []
  *       - bearerAuth: []
+ *       - userIdHeader: []
  *     parameters:
  *       - in: query
  *         name: type
@@ -75,8 +75,8 @@ router.get("/claims/requirements", requireAuth, claimController.getRequirements)
  *     summary: 發起理賠申請導引
  *     description: 查詢使用者當前有效保單，並回傳導引至前端理賠申請頁面的操作指令與可理賠保單清單。
  *     security:
- *       - cookieAuth: []
  *       - bearerAuth: []
+ *       - userIdHeader: []
  *     responses:
  *       200:
  *         description: 成功產生理賠申請導引 Action

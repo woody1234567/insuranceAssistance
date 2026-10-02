@@ -23,7 +23,6 @@
 | **ORM 工具 (Dev)** | `drizzle-kit` | 資料庫 Schema 產生、遷移與檢查工具 |
 | **安全性與工具** | `helmet`, `cors`, `dotenv` | HTTP 安全標頭、跨域設定、環境變數載入 |
 | **驗證函式庫** | `zod` | 請求參數 Schema 驗證與型別推導 |
-| **認證模組** | `better-auth` | 身分驗證與 Session 管理 |
 | **開發執行 (Dev)** | `tsx`, `vitest` | TypeScript 熱重載開發伺服器與測試框架 |
 
 ### 1.2 TypeScript 編譯配置 (`tsconfig.json`)
@@ -65,7 +64,7 @@
 ```
 backend/
 ├── src/
-│   ├── config/              # 環境變數載入與驗證 (DB, GCP, Better Auth, Port)
+│   ├── config/              # 環境變數載入與驗證 (DB, GCP, Port)
 │   │   └── env.ts
 │   ├── db/                  # Drizzle ORM 資料庫實例與 Schema 定義
 │   │   ├── index.ts         # 資料庫連線池與 Drizzle Client 匯出
@@ -99,7 +98,7 @@ backend/
 │   │   ├── policy.template.ts
 │   │   └── claim.template.ts
 │   ├── middlewares/         # Express 中介軟體
-│   │   ├── auth.middleware.ts       # Better Auth 身分認證與上下文注入
+│   │   ├── auth.middleware.ts       # 身分認證與上下文注入
 │   │   ├── validate.middleware.ts   # Zod 請求驗證中介
 │   │   ├── error.middleware.ts      # 全域錯誤攔截中介
 │   │   └── logging.middleware.ts    # 請求記錄中介
@@ -404,7 +403,7 @@ export class PolicyController {
 
   getPolicies = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id; // 來自 Better Auth Middleware 注入
+      const userId = req.user?.id; // 來自 Auth Middleware 注入
       if (!userId) {
         throw new AppError('尚未登入或認證無效', 401, 'UNAUTHORIZED');
       }
@@ -436,7 +435,7 @@ const policyRepo = new UserInsuranceRepository(db);
 const policyService = new UserPolicyService(policyRepo);
 const policyController = new PolicyController(policyService);
 
-// 路由綁定 (套用 Better Auth 認證中介層)
+// 路由綁定 (套用認證中介層)
 router.get('/policies', requireAuth, policyController.getPolicies);
 
 export { router as policyRouter };
@@ -582,7 +581,7 @@ flowchart LR
   1. 實作 `src/utils/app-error.ts` 與 `src/utils/api-response.ts`（統一 JSON Envelope）。
   2. 實作 `src/middlewares/error.middleware.ts`（全域例外捕獲與環境遮蔽）。
   3. 實作 `src/middlewares/validate.middleware.ts`（Zod Schema 驗證）。
-  4. 整合 Better Auth 中介層 `src/middlewares/auth.middleware.ts`。
+  4. 整合身分認證中介層 `src/middlewares/auth.middleware.ts`。
   5. 實作健康檢查端點 `GET /healthz`（含資料庫連線檢測）。
   6. 實作 `src/app.ts` 與 `src/index.ts`（掛載中介軟體與優雅關機）。
 - **驗收標準**：啟動 AP Server，打 `GET /healthz` 回傳 200，打非法路由正確回傳標準 404 JSON。

@@ -17,6 +17,10 @@ describe("Swagger Documentation Integration", () => {
     expect(paths).toContain("/api/v1/claims/requirements");
     expect(paths).toContain("/api/v1/claims/start");
     expect(paths).toContain("/healthz");
+
+    // Verify security schemes
+    expect(swaggerSpec.components.securitySchemes).toHaveProperty("bearerAuth");
+    expect(swaggerSpec.components.securitySchemes).toHaveProperty("userIdHeader");
   });
 
   it("serves OpenAPI JSON schema at /api-docs.json", async () => {
@@ -32,6 +36,7 @@ describe("Swagger Documentation Integration", () => {
       const json = await response.json();
       expect(json.openapi).toBe("3.0.0");
       expect(json.paths["/api/v1/assistant/message"]).toBeDefined();
+      expect(json.paths["/api/v1/policies"]).toBeDefined();
     } finally {
       await new Promise<void>((resolve, reject) => {
         server.close((err) => (err ? reject(err) : resolve()));

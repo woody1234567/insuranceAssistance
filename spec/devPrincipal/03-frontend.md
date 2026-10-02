@@ -124,7 +124,7 @@ import axios from 'axios';
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 15000,
-  withCredentials: true, // 支援 Better Auth Cookie / Session 傳遞
+  withCredentials: true, // 支援憑證與 Cookie 傳遞
   headers: {
     'Content-Type': 'application/json'
   }

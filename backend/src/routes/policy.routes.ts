@@ -18,8 +18,8 @@ const router = Router();
  *     summary: 查詢使用者所有有效保單
  *     description: 取得當前已登入使用者名下的所有有效保單列表與總數。
  *     security:
- *       - cookieAuth: []
  *       - bearerAuth: []
+ *       - userIdHeader: []
  *     responses:
  *       200:
  *         description: 成功取得保單清單
@@ -54,8 +54,8 @@ const router = Router();
  *     summary: 查詢當前使用者的個人保單
  *     description: 與 /api/v1/policies 相同，提供符合 RESTful 設計規範的使用者個人保單查詢端點。
  *     security:
- *       - cookieAuth: []
  *       - bearerAuth: []
+ *       - userIdHeader: []
  *     responses:
  *       200:
  *         description: 成功取得保單清單

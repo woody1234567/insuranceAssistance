@@ -1,8 +1,8 @@
 import { generateText, Output, type LanguageModel } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createAIModel } from "./model-provider.js";
 import { z } from "zod";
-import { env } from "../config/env.js";
 import { AppError } from "../utils/app-error.js";
+import { logger } from "../utils/logger.js";
 
 export const intentSchema = z.object({
   intent: z.enum(["list_user_policies", "claim_required_documents", "start_claim", "unknown"]),
@@ -28,7 +28,7 @@ claimType 只可使用 hospitalization（住院）、accident（意外）、surg
 export class VercelIntentClassifier implements IntentClassifier {
   private readonly model: LanguageModel;
 
-  public constructor(model: LanguageModel = openai(env.AI_MODEL)) {
+  public constructor(model: LanguageModel = createAIModel()) {
     this.model = model;
   }
 
@@ -52,7 +52,13 @@ export class VercelIntentClassifier implements IntentClassifier {
       if (error instanceof AppError) {
         throw error;
       }
+      const rawErrorMessage = error instanceof Error ? error.message : String(error);
+      logger.error("AI intent classification failed", {
+        error: rawErrorMessage,
+        stack: error instanceof Error ? error.stack : undefined,
+      });
       throw new AppError("AI 意圖判斷服務暫時無法使用", 502, "AI_CLASSIFICATION_FAILED");
     }
   }
 }
+

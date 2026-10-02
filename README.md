@@ -18,6 +18,8 @@
 - [資料庫實體模型與版控 (MySQL)](#-資料庫實體模型與版控-mysql)
 - [專案目錄結構](#-專案目錄結構)
 - [快速開始](#-快速開始)
+  - [本機開發與測試](#1-啟動本機-mysql-資料庫)
+  - [GCP Cloud Run 雲端部署](#3-️-gcp-cloud-run-雲端部署)
 - [相關規格與開發準則文件](#-相關規格與開發準則文件)
 
 ---
@@ -27,16 +29,16 @@
 傳統保險服務常因保單條款繁複、理賠流程冗長而造成保戶困擾。「保險智慧助理」旨在提供直覺、安全且結構化的交談式體驗：
 
 - **意圖分類**：精準理解使用者自然語言提問（例如「我目前有幾張保單？」、「住院需要準備什麼？」）。
-- **安全驗證**：透過 [Better Auth](https://better-auth.com/) 進行 Session 授權驗證，確保個人保單資料不外洩。
+- **身分驗證與安全授權**：支援 Bearer Token 或使用者標頭 (`x-user-id`) 進行身分識別與上下文注入，確保個人保單資料安全。
 - **模板化回應**：AI 僅負責意圖判定與參數解析，資料查詢與回答皆經由業務層 (Service Layer) 與回應模板 (Response Template) 輸出，確保金融資訊精確無誤。
 - **動態行為導航**：支援 Action Response，後端可指揮前端 Router 自動導航至理賠申請頁面。
-- **雲原生雙服務架構**：前端（Web Server）與後端（AP Server）完全解耦，各自作為獨立微服務部署於 GCP Cloud Run，彈性自動伸縮。
+- **雲原生雙服務架構**：前端（Web Server）與後端（AP Server）完全解耦，各自作為獨立微服務部署於 GCP Cloud Run，支援 Cloud SQL Unix Socket 與 Secret Manager 整合。
 
 ---
 
 ## 🚀 核心功能 (v1)
 
-| 意圖名稱 (Intent)          | 觸發範例                                               | 說明                                                                   |
+| 功能模組 / 意圖名稱       | 觸發範例 / 操作方式                                   | 說明                                                                   |
 | :------------------------- | :----------------------------------------------------- | :--------------------------------------------------------------------- |
 | `list_user_policies`       | 「我目前有幾張保單？」、「查看我的保險」               | 查詢當前登入使用者的所有有效保單狀態與明細。                           |
 | `claim_required_documents` | 「住院理賠需要準備什麼文件？」、「車禍理賠要帶什麼？」 | 根據使用者持有的保單類型與出險情境，列出需檢附的理賠文件清單。         |
@@ -54,30 +56,32 @@
                               使用者瀏覽器 (Client)
                                        │
             ┌──────────────────────────┴──────────────────────────┐
-            │ HTTPS (靜態資源與 SPA 頁面)                          │ HTTPS (RESTful API)
+            │ HTTPS (靜態資源與 SPA 頁面)                          │ HTTPS (RESTful API / OAuth Callback)
             ▼                                                     ▼
 ┌──────────────────────────────┐              ┌──────────────────────────────┐
 │  Web Server (Frontend)       │              │  AP Server (Backend)         │
 │  - Vue 3 + Vite + TypeScript │              │  - Node.js + Express (TS)    │
 │  - Nginx Alpine Container    │              │  - 三層式架構 (Controller/   │
 │  - GCP Cloud Run (Service 1) │              │    Service/Repository)       │
-└──────────────────────────────┘              │  - GCP Cloud Run (Service 2) │
-                                              └──────────────┬───────────────┘
-                                                             │
-                                     ┌───────────────────────┼───────────────────────┐
-                                     │ Unix Socket / Proxy   │ API Key               │ Secret
-                                     ▼                       ▼                       ▼
-                         ┌───────────────────────┐ ┌──────────────────┐ ┌──────────────────┐
-                         │ GCP Cloud SQL (MySQL) │ │ Intent AI (LLM)  │ │  Secret Manager  │
-                         └───────────────────────┘ └──────────────────┘ └──────────────────┘
+│  - Port 80                   │              │  - GCP Cloud Run (Service 2) │
+└──────────────────────────────┘              │  - Port 8080 (Trust Proxy)   │
+                                               └──────────────┬───────────────┘
+                                                              │
+                                      ┌───────────────────────┼───────────────────────┐
+                                      │ Unix Socket / TCP     │ IAM / Vertex AI       │ Secret
+                                      ▼                       ▼                       ▼
+                          ┌───────────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+                          │ GCP Cloud SQL (MySQL) │ │ Google Vertex AI │ │  Secret Manager  │
+                          │ (Auth + Insurance DB) │ │ (Gemini 2.0 LLM) │ │ (Keys & Passwords)│
+                          └───────────────────────┘ └──────────────────┘ └──────────────────┘
 ```
 
 - **Frontend (Web Server)**：Vue 3 + Vite + Pinia + Vue Router + TypeScript，以 Nginx 容器託管並部署於 GCP Cloud Run。
-- **Backend (AP Server)**：Node.js + Express + TypeScript，採用嚴格三層式架構，套件管理統一使用 **pnpm**。
+- **Backend (AP Server)**：Node.js + Express + TypeScript，採用嚴格三層式架構，套件管理統一使用 **pnpm**，啟用 Trust Proxy 適配 GCP 負載平衡。
 - **ORM & Data Access**：Drizzle ORM (`drizzle-orm`, `mysql2`)，透過 Type-Safe Query Builder 自動編譯 Prepared Statements，徹底防禦 SQL Injection。
-- **Database**：MySQL 8.0+（託管於 GCP Cloud SQL），所有 DDL/DML 版本控制皆收錄於專案 `db/` 目錄。
-- **Authentication**：Better Auth，處理 Session 驗證並取得 `userId`。
-- **AI Engine**：Intent Classification AI（基於 Vercel AI SDK 與 Gemini LLM），負責理解使用者對話並分類意圖。
+- **Database**：MySQL 8.0+（支援本地端與 GCP Cloud SQL Unix Socket 雙模連線），包含核心業務資料表（保險商品、使用者保單及理賠文件規範）。
+- **Authentication**：支援 Bearer Token (`Authorization: Bearer <token>`) 或使用者標頭 (`x-user-id`) 認證與上下文注入。
+- **AI Engine**：Intent Classification AI（支援 Google Cloud Vertex AI 或 Google AI Studio Gemini 模型），負責理解使用者對話並分類意圖。
 - **Deployment & Cloud**：GCP Cloud Run + GCP Cloud SQL (MySQL) + GCP Secret Manager。
 
 ### 後端三層式架構
@@ -88,7 +92,7 @@
 ┌──────────────────────────────────────────────────────────────┐
 │               1. 表現層 (Controller Layer)                   │
 │   - Express Router / Controllers (Assistant, Policy, Claims) │
-│   - 職責：HTTP 路由分發、Zod 輸入驗證、Better Auth Session 認證 │
+│   - 職責：HTTP 路由分發、Zod 輸入驗證、身分認證中介層         │
 └──────────────────────────────┬───────────────────────────────┘
                                │ 調用 Service (DTO / Context)
 ┌──────────────────────────────▼───────────────────────────────┐
@@ -130,7 +134,7 @@ POST /assistant/message
 
 後端處理流程：
 
-1. 經由 Better Auth 驗證使用者 Session，取出 `userId`。
+1. 經由認證中介層 (`requireAuth`) 驗證使用者標頭或憑證，取出 `userId`。
 2. 將訊息傳入 **Intent Classification AI** 判定意圖。
 3. **Intent Router** 根據意圖分流呼叫對應內部服務（Controller ➔ Service ➔ Repository）。
 
@@ -272,7 +276,8 @@ erDiagram
     }
 ```
 
-- 結構定義 (DDL)：收錄於 `db/ddl/`（如 `V001__create_initial_schema.sql`）
+- 結構定義 (DDL)：收錄於 `db/ddl/`
+  - `V001__create_initial_schema.sql`：核心業務資料表（使用者、保險商品、保單關聯、理賠文件規範）
 - 種子資料 (DML)：收錄於 `db/dml/`（如 `V001__seed_initial_data.sql`）
 - 執行說明請參閱 [db/README.md](db/README.md)。
 
@@ -294,7 +299,7 @@ insuranceAssistance/
 │   │   ├── repositories/     # 資料存取層 Repository (Drizzle ORM 防注入)
 │   │   ├── templates/        # 回應與動作模板 (Response & Action Templates)
 │   │   ├── ai/               # 意圖分類器 (Vercel AI SDK) 與路由器 (Intent Router)
-│   │   ├── middlewares/      # 認證 (Better Auth)、Zod 驗證與全域錯誤攔截
+│   │   ├── middlewares/      # 身分認證 (requireAuth)、Zod 驗證與全域錯誤攔截
 │   │   ├── models/           # DTO 型別定義
 │   │   ├── utils/            # AppError, ApiResponse, Logger
 │   │   ├── app.ts            # Express 應用設定與中介層掛載
@@ -373,21 +378,22 @@ pnpm dev
 ```
 
 後端啟動後可開啟 Swagger UI 查看與測試 API：
-- **Swagger UI 介面**：`http://localhost:8080/api-docs`
-- **OpenAPI JSON 規格**：`http://localhost:8080/api-docs.json`
+- **Swagger UI 介面**：`http://localhost:3000/api-docs` (或 `8080`)
+- **OpenAPI JSON 規格**：`http://localhost:3000/api-docs.json`
 
-後端環境變數設定檔 (`backend/.env`)：
+後端本機環境變數設定檔 (`backend/.env`)：
 
 ```env
-PORT=8080
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=app_backend
-DB_PASSWORD=app_secret
-DB_NAME=insurance_db
-BETTER_AUTH_SECRET="your-better-auth-secret"
-BETTER_AUTH_URL="http://localhost:8080"
-AI_API_KEY="your-llm-api-key"
+# 資料庫連線：本機使用 DATABASE_URL，GCP 支援 DB_SOCKET_PATH
+DATABASE_URL=mysql://app_backend:app_secret@127.0.0.1:3306/insurance_db
+PORT=3000
+CORS_ORIGIN=http://localhost:5173
+
+# AI 意圖分析（支援 Vertex AI 或 Google AI Studio）
+AI_PROVIDER=google-vertex
+AI_MODEL=gemini-2.0-flash
+GOOGLE_VERTEX_PROJECT=insurance-assistance-project
+GOOGLE_VERTEX_LOCATION=asia-east1
 ```
 
 ### 3. 啟動前端 Web Server
@@ -401,7 +407,29 @@ pnpm dev
 前端環境變數設定檔 (`frontend/.env`)：
 
 ```env
-VITE_API_BASE_URL="http://localhost:8080"
+VITE_API_BASE_URL="http://localhost:3000"
+```
+
+### 4. ☁️ GCP Cloud Run 雲端部署
+
+系統原生支援前後端雙服務部署於 **GCP Cloud Run**，並透過 **GCP Secret Manager** 管理機敏憑證：
+
+#### 步驟 1：部署後端 AP Server 至 Cloud Run
+```bash
+gcloud run deploy insurance-ap-server \
+  --image asia-east1-docker.pkg.dev/YOUR_PROJECT/insurance-repo/ap-server:latest \
+  --region asia-east1 \
+  --set-env-vars="AI_PROVIDER=google-vertex,AI_MODEL=gemini-2.0-flash,GOOGLE_VERTEX_LOCATION=asia-east1,CORS_ORIGIN=https://insurance.yourdomain.com,DB_SOCKET_PATH=/cloudsql/YOUR_PROJECT:asia-east1:insurance-mysql,DB_USER=app_backend,DB_NAME=insurance_db" \
+  --set-secrets="DB_PASSWORD=DB_PASSWORD:latest" \
+  --add-cloudsql-instances="YOUR_PROJECT:asia-east1:insurance-mysql"
+```
+
+#### 步驟 2：部署前端 Web Server 至 Cloud Run
+```bash
+gcloud run deploy insurance-web-server \
+  --image asia-east1-docker.pkg.dev/YOUR_PROJECT/insurance-repo/web-server:latest \
+  --region asia-east1 \
+  --set-env-vars="VITE_API_BASE_URL=https://api.yourdomain.com"
 ```
 
 ---

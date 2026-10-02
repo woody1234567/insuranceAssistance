@@ -180,9 +180,19 @@ Cloud Run 與 Cloud SQL MySQL 連線推薦使用 **Unix Socket**（自動透過 
 gcloud run deploy insurance-ap-server \
   --image asia-east1-docker.pkg.dev/my-project/insurance-repo/ap-server:latest \
   --region asia-east1 \
-  --set-secrets="DB_PASSWORD=DB_PASSWORD:latest,BETTER_AUTH_SECRET=BETTER_AUTH_SECRET:latest,AI_API_KEY=GEMINI_API_KEY:latest" \
+  --set-env-vars="AI_PROVIDER=google-vertex,AI_MODEL=gemini-2.0-flash,GOOGLE_VERTEX_LOCATION=asia-east1,CORS_ORIGIN=https://insurance.yourdomain.com,DB_SOCKET_PATH=/cloudsql/my-project:asia-east1:insurance-mysql,DB_USER=app_backend,DB_NAME=insurance_db" \
+  --set-secrets="DB_PASSWORD=DB_PASSWORD:latest" \
   --add-cloudsql-instances="my-project:asia-east1:insurance-mysql"
 ```
+
+> **Vertex AI 權限配置**：
+> Cloud Run 執行的 Service Account 需賦予 Vertex AI 調用權限：
+> ```bash
+> gcloud projects add-iam-policy-binding PROJECT_ID \
+>   --member="serviceAccount:YOUR_SERVICE_ACCOUNT@PROJECT_ID.iam.gserviceaccount.com" \
+>   --role="roles/aiplatform.user"
+> ```
+
 
 ### 5.3 跨來源資源共享 (CORS) 政策
 AP Server 必須於 Express / Fastify 配置嚴格的 CORS 政策，僅允許已授權的 Web Server 網域發出帶有 Credential 的請求：

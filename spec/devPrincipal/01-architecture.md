@@ -44,7 +44,7 @@ flowchart TD
 
 ### 1.2 AP Server (後端)
 
-- **職責**：提供 RESTful API 端點、使用者認證與授權 (Better Auth)、意圖分析與流程編排、資料庫操作與商務邏輯。
+- **職責**：提供 RESTful API 端點、使用者認證與授權、意圖分析與流程編排、資料庫操作與商務邏輯。
 - **特點**：純無狀態 (Stateless)，水平擴展安全，資料庫連線由 Cloud SQL Auth Proxy 或連線池受控管理。
 
 ---
@@ -60,7 +60,7 @@ flowchart TD
     subgraph PresentationTier ["1. 表現層 (Presentation / Controller Layer)"]
         Controller["Controller<br/>(e.g., AssistantController, PolicyController)"]
         Validator["請求驗證器 (Schema Validator)"]
-        AuthMiddleware["認證中介層 (Better Auth Middleware)"]
+        AuthMiddleware["認證中介層 (Auth Middleware)"]
     end
 
     subgraph BusinessTier ["2. 商業邏輯層 (Business Logic / Service Layer)"]
@@ -98,7 +98,7 @@ _檔案路徑位置：`backend/src/controllers/`_
 - **核心責任**：
   1. 接收與解析 HTTP Request（URL 參數、Query String、Request Body）。
   2. 呼叫驗證模組（如 Zod / Joi）進行 Input Schema 驗證，攔截非法參數。
-  3. 讀取中介軟體附加的授權上下文（例如從 Better Auth 取得 `userId`、角色）。
+  3. 讀取中介軟體附加的授權上下文（例如從認證中介層取得 `userId`、角色）。
   4. 調用對應的 Service 方法，不介入任何業務計算或資料組合。
   5. 將 Service 回傳的領域資料打包為統一格式的 HTTP JSON Response（指定 HTTP 狀態碼）。
 - **嚴格禁令**：

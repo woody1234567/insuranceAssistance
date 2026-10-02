@@ -21,19 +21,37 @@ const swaggerDefinition: Options["swaggerDefinition"] = {
       description: "當前伺服器",
     },
   ],
+  tags: [
+    {
+      name: "Assistant",
+      description: "智慧保險諮詢助理對話 API",
+    },
+    {
+      name: "Policies",
+      description: "使用者保單查詢 API",
+    },
+    {
+      name: "Claims",
+      description: "理賠相關 API",
+    },
+    {
+      name: "System",
+      description: "系統健康檢查與基礎 API",
+    },
+  ],
   components: {
     securitySchemes: {
-      cookieAuth: {
-        type: "apiKey",
-        in: "cookie",
-        name: "better-auth.session_token",
-        description: "Better Auth Session Cookie (`better-auth.session_token`)",
-      },
       bearerAuth: {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
-        description: "Better Auth Bearer Token (Authorization: Bearer <token>)",
+        description: "Bearer Token 或 User ID (Authorization: Bearer <token>)",
+      },
+      userIdHeader: {
+        type: "apiKey",
+        in: "header",
+        name: "x-user-id",
+        description: "使用者 ID 標頭 (x-user-id: <user-id>)",
       },
     },
     schemas: {
@@ -327,4 +345,13 @@ const options: Options = {
   ],
 };
 
-export const swaggerSpec = swaggerJSDoc(options);
+function buildSwaggerSpec(): Record<string, any> {
+  const spec = swaggerJSDoc(options) as Record<string, any>;
+  spec.paths = spec.paths || {};
+  spec.components = spec.components || {};
+  spec.components.schemas = spec.components.schemas || {};
+  spec.components.securitySchemes = spec.components.securitySchemes || {};
+  return spec;
+}
+
+export const swaggerSpec = buildSwaggerSpec();
