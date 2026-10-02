@@ -1,6 +1,6 @@
 # 🛡️ 保險智慧助理 (Insurance Assistance)
 
-基於 **Vue 3** (Web Server)、**Express + TypeScript 三層式架構** (AP Server)、**Drizzle ORM**、**MySQL 8.0+** 與意圖辨識 AI (Vercel AI SDK) 的智慧保險助理系統。系統透過自然語言理解使用者需求，結合身分驗證與業務服務，提供即時保單查詢、理賠文件指引與線上理賠流程導引，前後端各自獨立容器化部署於 **GCP Cloud Run**。
+基於 **React** (Web Server)、**Express + TypeScript 三層式架構** (AP Server)、**Drizzle ORM**、**MySQL 8.0+** 與意圖辨識 AI (Vercel AI SDK) 的智慧保險助理系統。系統透過自然語言理解使用者需求，結合身分驗證與業務服務，提供即時保單查詢、理賠文件指引與線上理賠流程導引，前後端各自獨立容器化部署於 **GCP Cloud Run**。
 
 ---
 
@@ -60,7 +60,7 @@
             ▼                                                     ▼
 ┌──────────────────────────────┐              ┌──────────────────────────────┐
 │  Web Server (Frontend)       │              │  AP Server (Backend)         │
-│  - Vue 3 + Vite + TypeScript │              │  - Node.js + Express (TS)    │
+│  - React + Vite + TypeScript │              │  - Node.js + Express (TS)    │
 │  - Nginx Alpine Container    │              │  - 三層式架構 (Controller/   │
 │  - GCP Cloud Run (Service 1) │              │    Service/Repository)       │
 │  - Port 80                   │              │  - GCP Cloud Run (Service 2) │
@@ -76,7 +76,7 @@
                           └───────────────────────┘ └──────────────────┘ └──────────────────┘
 ```
 
-- **Frontend (Web Server)**：Vue 3 + Vite + Pinia + Vue Router + TypeScript，以 Nginx 容器託管並部署於 GCP Cloud Run。
+- **Frontend (Web Server)**：React + Vite + Zustand + React Router + TypeScript，以 Nginx 容器託管並部署於 GCP Cloud Run。
 - **Backend (AP Server)**：Node.js + Express + TypeScript，採用嚴格三層式架構，套件管理統一使用 **pnpm**，啟用 Trust Proxy 適配 GCP 負載平衡。
 - **ORM & Data Access**：Drizzle ORM (`drizzle-orm`, `mysql2`)，透過 Type-Safe Query Builder 自動編譯 Prepared Statements，徹底防禦 SQL Injection。
 - **Database**：MySQL 8.0+（支援本地端與 GCP Cloud SQL Unix Socket 雙模連線），包含核心業務資料表（保險商品、使用者保單及理賠文件規範）。
@@ -221,7 +221,7 @@ POST /assistant/message
     }
   }
   ```
-- **前端行為**：前端 Vue 應用監聽到 `NAVIGATE` Action 後，調用 Vue Router 自動導航至 `/claims/apply`。
+- **前端行為**：前端 React 應用監聽到 `NAVIGATE` Action 後，調用 React Router 自動導航至 `/claims/apply`。
 
 ---
 
@@ -310,13 +310,13 @@ insuranceAssistance/
 │   ├── package.json
 │   ├── pnpm-lock.yaml        # pnpm 依賴鎖定檔
 │   └── tsconfig.json
-├── frontend/                 # 前端 Web Server (Vue 3 / Vite)
+├── frontend/                 # 前端 Web Server (React / Vite)
 │   ├── src/
 │   │   ├── components/       # 對話介面與卡片元件
 │   │   ├── views/            # SPA 頁面 (助理對話、理賠申請)
-│   │   ├── composables/      # 對話與狀態組合邏輯
-│   │   ├── stores/           # Pinia 狀態管理
-│   │   ├── router/           # Vue Router 配置 (NAVIGATE Action 接收端)
+│   │   ├── hooks/            # 自訂 Hooks (對話與狀態處理)
+│   │   ├── stores/           # Zustand 狀態管理
+│   │   ├── router/           # React Router 配置 (NAVIGATE Action 接收端)
 │   │   └── services/         # AP Server API 客戶端
 │   ├── nginx.conf            # Web Server 容器 Nginx 設定 (SPA fallback)
 │   ├── Dockerfile            # Web Server Multi-stage Dockerfile
@@ -332,7 +332,7 @@ insuranceAssistance/
 │   │   ├── README.md         # 開發準則總覽
 │   │   ├── 01-architecture.md# 系統與三層式架構規範
 │   │   ├── 02-backend.md     # 後端規範 (TypeScript, Express & Drizzle ORM)
-│   │   ├── 03-frontend.md    # 前端規範 (Vue 3)
+│   │   ├── 03-frontend.md    # 前端規範 (React)
 │   │   ├── 04-database.md    # 資料庫設計與版控規範 (MySQL)
 │   │   └── 05-deployment.md  # 容器化與 GCP Cloud Run 部署規範
 │   └── APIDesign/
@@ -440,7 +440,7 @@ gcloud run deploy insurance-web-server \
   - [開發準則總覽](spec/devPrincipal/README.md)
   - [01. 系統架構與三層式設計準則](spec/devPrincipal/01-architecture.md)
   - [02. 後端開發規範 (TypeScript, Express & Drizzle ORM)](spec/devPrincipal/02-backend.md)
-  - [03. 前端開發規範 (Vue 3)](spec/devPrincipal/03-frontend.md)
+  - [03. 前端開發規範 (React)](spec/devPrincipal/03-frontend.md)
   - [04. 資料庫設計與版控規範 (MySQL & db/)](spec/devPrincipal/04-database.md)
   - [05. 容器化與 GCP Cloud Run 部署規範](spec/devPrincipal/05-deployment.md)
 - **資料庫管理 (db)**：

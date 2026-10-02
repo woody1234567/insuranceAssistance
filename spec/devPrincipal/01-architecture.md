@@ -16,7 +16,7 @@ flowchart TD
 
     subgraph GCPCloudRun ["GCP Cloud Run (Serverless Container)"]
         subgraph WebService ["Web Server 服務 (Cloud Run)"]
-            NginxServer["Nginx / SPA Static Server<br/>(Vue 3 + Vite)"]
+            NginxServer["Nginx / SPA Static Server<br/>(React + Vite)"]
         end
 
         subgraph APIService ["AP Server 服務 (Cloud Run)"]
@@ -39,7 +39,7 @@ flowchart TD
 
 ### 1.1 Web Server (前端)
 
-- **職責**：提供 Vue 3 SPA 靜態資產服務、HTML 靜態託管、前端路由轉發（處理 Client-side routing，所有未知路由倒回 `index.html`）。
+- **職責**：提供 React SPA 靜態資產服務、HTML 靜態託管、前端路由轉發（處理 Client-side routing，所有未知路由倒回 `index.html`）。
 - **特點**：輕量無狀態、不含業務機密邏輯，API 請求直接打往 AP Server。
 
 ### 1.2 AP Server (後端)

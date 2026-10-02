@@ -26,7 +26,7 @@
 | 領域 | 技術選型 | 說明 |
 | :--- | :--- | :--- |
 | **套件管理器** | `pnpm` (>= 9.x) | 前後端統一使用 pnpm，確保依賴解析快速且節省空間 |
-| **前端應用 (Web Server)** | Vue 3 + Vite + TypeScript | 響應式 SPA 介面、Pinia 狀態管理、Vue Router 路由控制 |
+| **前端應用 (Web Server)** | React + Vite + TypeScript | 響應式 SPA 介面、Zustand 狀態管理、React Router 路由控制 |
 | **後端服務 (AP Server)** | Node.js (LTS >= 20) + Express + TypeScript | 三層式架構、RESTful API、Drizzle ORM、AI 意圖路由 |
 | **資料庫系統** | MySQL (8.0+) | 關聯式資料庫，儲存保單、使用者資料與理賠規則 |
 | **資料庫版控** | SQL Script (`db/ddl`, `db/dml`) | 結構化遷移腳本版控，支援回溯與環境重建 |
@@ -44,8 +44,8 @@
 - [02. 後端開發規範 (TypeScript, Express & Drizzle ORM)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/02-backend.md)
   - TypeScript 撰寫標準、專案目錄結構
   - RESTful API 設計、輸入驗證、統一回應與錯誤處理
-- [03. 前端開發規範 (Vue 3)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/03-frontend.md)
-  - Vue 3 Composition API 與 SFC 撰寫風格
+- [03. 前端開發規範 (React)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/03-frontend.md)
+  - React 函式型元件 (Functional Components) 與 Custom Hooks 撰寫風格
   - 狀態管理、AP Server 串接與動態意圖動作 (NAVIGATE Action) 處理
 - [04. 資料庫設計與版控規範 (MySQL & db/)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/04-database.md)
   - MySQL 8.0 命名習慣、欄位型態與索引原則

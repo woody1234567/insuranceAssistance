@@ -15,7 +15,7 @@
         ▼                                               ▼
 ┌────────────────────────┐             ┌────────────────────────┐
 │  Web Server (Frontend) │             │  AP Server (Backend)   │
-│  - Vue 3 + Nginx       │             │  - Node.js + TS        │
+│  - React + Nginx       │             │  - Node.js + TS        │
 │  - Cloud Run Service   │             │  - Cloud Run Service   │
 │  - URL: web-app-xxx    │             │  - URL: api-app-xxx    │
 └────────────────────────┘             └───────────┬────────────┘
@@ -33,7 +33,7 @@
 
 ## 2. 前端容器化規範 (Web Server Dockerfile)
 
-前端採用 **Multi-stage Build**，第一階段使用 Node.js + pnpm 編譯 Vue 3 靜態檔案，第二階段使用極輕量的 `nginx:alpine` 託管：
+前端採用 **Multi-stage Build**，第一階段使用 Node.js + pnpm 編譯 React 靜態檔案，第二階段使用極輕量的 `nginx:alpine` 託管：
 
 ```dockerfile
 # frontend/Dockerfile
