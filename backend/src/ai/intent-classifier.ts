@@ -50,7 +50,6 @@ export class VercelIntentClassifier implements IntentClassifier {
           description: "保險智慧助理的意圖與理賠類型分類結果",
         }),
       });
-      console.log("AI intent classification output:", output);
       if (!output) {
         throw new AppError(
           "AI 無法產生有效的意圖分類結果",
