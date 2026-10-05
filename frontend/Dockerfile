@@ -1,36 +1,20 @@
-# ================================
-# Stage 1: Build Frontend (Vite)
-# ================================
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /app
 
 # Copy dependency manifests and install packages
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
-# Allow passing VITE_API_BASE_URL during build time
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
-
-# Copy source code and build production assets
+# Copy source code
 COPY . .
-RUN npm run build
-
-# ================================
-# Stage 2: Serve with Nginx
-# ================================
-FROM nginx:alpine AS runtime
 
 # GCP Cloud Run default port is 8080 (Cloud Run will inject $PORT)
 ENV PORT=8080
 
-# Nginx official image auto-substitutes environment variables in /etc/nginx/templates/*.template
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-
-# Copy compiled static assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# When container starts on Cloud Run:
+# 1. npm run build (at container startup, so it captures Cloud Run runtime environment variables like VITE_API_BASE_URL)
+# 2. serve the built dist directory with SPA support (-s) on $PORT
+CMD ["sh", "-c", "npm run build && npx serve -s dist -l ${PORT:-8080}"]

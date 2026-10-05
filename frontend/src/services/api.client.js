@@ -1,5 +1,5 @@
 // 開發時由 vite.config.js 的 proxy 轉發到後端
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
 
 // 目前沒有登入功能，先使用資料庫中的使用者 ID
 const USER_ID =
