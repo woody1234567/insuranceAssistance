@@ -49,6 +49,23 @@ describe("AI Model Provider & Intent Classifier", () => {
       );
     });
 
+    it("successfully classifies unmatchable message into redirect_to_human intent", async () => {
+      const mockOutput = {
+        intent: "redirect_to_human" as const,
+        claimType: null,
+        confidence: 0.95,
+      };
+
+      vi.mocked(aiModule.generateText).mockResolvedValueOnce({
+        output: mockOutput,
+      } as any);
+
+      const classifier = new VercelIntentClassifier();
+      const result = await classifier.classify("我想了解房貸利率");
+
+      expect(result).toEqual(mockOutput);
+    });
+
     it("throws AppError with AI_CLASSIFICATION_FAILED when output is missing", async () => {
       vi.mocked(aiModule.generateText).mockResolvedValueOnce({
         output: null,

@@ -304,6 +304,28 @@ const swaggerDefinition: Options["swaggerDefinition"] = {
         },
         required: ["type", "intent", "content", "data"],
       },
+      RedirectToHumanResponseDTO: {
+        type: "object",
+        properties: {
+          type: {
+            type: "string",
+            example: "text",
+          },
+          intent: {
+            type: "string",
+            example: "redirect_to_human",
+          },
+          content: {
+            type: "string",
+            example: "我無法回答您這項問題，請您尋求專人服務。",
+          },
+          data: {
+            type: "object",
+            example: {},
+          },
+        },
+        required: ["type", "intent", "content", "data"],
+      },
       AssistantMessageRequest: {
         type: "object",
         properties: {

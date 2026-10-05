@@ -5,7 +5,13 @@ import { AppError } from "../utils/app-error.js";
 import { logger } from "../utils/logger.js";
 
 export const intentSchema = z.object({
-  intent: z.enum(["list_user_policies", "claim_required_documents", "start_claim", "unknown"]),
+  intent: z.enum([
+    "list_user_policies",
+    "claim_required_documents",
+    "start_claim",
+    "redirect_to_human",
+    "unknown",
+  ]),
   claimType: z.enum(["hospitalization", "accident", "surgery"]).nullable(),
   confidence: z.number().min(0).max(1),
 });
@@ -21,9 +27,9 @@ const systemPrompt = `你是保險智慧助理的意圖分類器。請只依照�
 - list_user_policies：查詢自己目前有幾張保單、查看保單或保險
 - claim_required_documents：詢問理賠需要哪些文件；同時判斷 claimType
 - start_claim：想要開始、申請或進入理賠流程
-- unknown：無法對應以上意圖
+- redirect_to_human：無法歸類為以上三種意圖（如詢問無關主題、一般問候、或無法確定）
 claimType 只可使用 hospitalization（住院）、accident（意外）、surgery（手術）；不涉及理賠文件時回傳 null。
-若無法確定，請使用 unknown，不要猜測。`;
+若無法確定或非上述業務，請使用 redirect_to_human，不要猜測。`;
 
 export class VercelIntentClassifier implements IntentClassifier {
   private readonly model: LanguageModel;

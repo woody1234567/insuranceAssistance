@@ -9,7 +9,7 @@ const STORAGE_KEY = "conversations";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // 後端要求補充理賠類型時，提供的選項
-const CLAIM_TYPES = ["住院", "意外", "手術", "旅遊意外"];
+const CLAIM_TYPES = ["住院", "意外", "手術"];
 
 // 後端目前沒有「歷史對話」API，所以先存在瀏覽器 localStorage
 // 訊息格式：{ role, text, isError?, retryText?, policies?, followUps? }
@@ -38,7 +38,8 @@ export function useAssistant() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
   }, [conversations]);
 
-  const active = conversations.find((c) => c.id === activeId) ?? conversations[0];
+  const active =
+    conversations.find((c) => c.id === activeId) ?? conversations[0];
 
   // 修改指定對話的訊息（用 id 指定，避免打字途中切換對話寫錯地方）
   const updateMessages = (id, fn) =>
@@ -75,6 +76,10 @@ export function useAssistant() {
       const res = await postAssistantMessage(userText);
 
       if (res.type === "text") {
+        if (res.intent === "redirect_to_human") {
+          await typeOut(id, res.content || "我無法回答您這項問題，請您尋求專人服務。");
+          return;
+        }
         const policies =
           res.intent === "list_user_policies" ? res.data?.policies : null;
         if (policies?.length) {

@@ -83,4 +83,19 @@ describe("assistant core flows", () => {
       payload: { route: "/claims/apply" },
     });
   });
+
+  it("routes unclassified requests to human redirection response", async () => {
+    const result = await createAssistant({
+      intent: "redirect_to_human",
+      claimType: null,
+      confidence: 0.95,
+    }).handleMessage("user-1", "我想知道今天天氣如何？");
+
+    expect(result).toEqual({
+      type: "text",
+      intent: "redirect_to_human",
+      content: "我無法回答您這項問題，請您尋求專人服務。",
+      data: {},
+    });
+  });
 });
