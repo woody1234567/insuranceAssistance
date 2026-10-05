@@ -1,0 +1,454 @@
+:root {
+  --teal: #00A48C;
+  --bg: #f2f2f2;
+  --text: #111;
+  --muted: #7a7a7a;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+  color: var(--text);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+/* ===== 側邊欄 ===== */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 300px;
+  box-sizing: border-box;
+  padding: 25px 28px 28px;
+  background: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+
+.brand-name {
+  flex: 1;
+  font-size: 24px;
+  font-weight: 700;
+  color: #00A48C;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+
+.new-chat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 45px;
+  padding: 0;
+  font-size: 17px;
+  background: none;
+  border: none;
+}
+
+.new-chat:disabled,
+.history-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.history-label {
+  margin-top: 30px;
+  font-size: 17px;
+  color: var(--muted);
+}
+
+.history {
+  flex: 1;
+  overflow-y: auto;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 歷史對話：每一列 = 標題按鈕 + 重新命名 / 刪除 */
+.history-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  border-radius: 10px;
+}
+.history-row:hover,
+.history-row:focus-within {
+  background: #f5f5f5;
+}
+.history-row.active {
+  background: #e6f6f3;
+}
+.history-row.active .history-item {
+  color: #00A48C;
+  font-weight: 600;
+}
+
+/* 標題按鈕（hover / active 的底色由 .history-row 負責） */
+.history-item {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  font-size: 17px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: none;
+  border: none;
+  border-radius: 10px;
+}
+
+.history-actions {
+  display: flex;
+  gap: 2px;
+  padding-right: 6px;
+  opacity: 0;
+}
+.history-row:hover .history-actions,
+.history-row:focus-within .history-actions,
+.history-row.active .history-actions {
+  opacity: 1;
+}
+/* 觸控裝置沒有 hover，所以一律顯示 */
+@media (hover: none) {
+  .history-actions {
+    opacity: 1;
+  }
+}
+
+.mini-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #555;
+  background: none;
+  border: none;
+  border-radius: 6px;
+}
+.mini-btn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+.mini-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rename-input {
+  flex: 1;
+  min-width: 0;
+  margin: 2px;
+  padding: 8px;
+  font: inherit;
+  font-size: 17px;
+  border: 1.5px solid var(--teal);
+  border-radius: 8px;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 18px;
+}
+
+/* ===== 對話區 ===== */
+.main {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg);
+}
+
+.expand-btn {
+  position: absolute;
+  top: 24px;
+  left: 16px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 56px 36px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.row.user {
+  justify-content: flex-end; /* 使用者訊息靠右 */
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  flex: none;
+  color: var(--teal);
+  object-fit: contain;
+}
+
+.bubble {
+  max-width: 70%;
+  box-sizing: border-box;
+  padding: 18px 32px;
+  font-size: 17px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #fff;
+  border-radius: 22px;
+}
+
+.row.user .bubble {
+  background: var(--teal);
+  color: #fff;
+}
+
+.bubble.error {
+  background: #fdecea;
+  color: #a12b20;
+  border: 1px solid #f5c2bd;
+}
+
+.policy-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.policy-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+  background: #f7f7f7;
+  border-radius: 12px;
+}
+
+.badge {
+  padding: 2px 10px;
+  font-size: 14px;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+.badge.ok   { background: #e0f5f1; color: #00796b; }
+.badge.warn { background: #fff3d6; color: #8a5a00; }
+.badge.off  { background: #eee;    color: #555; }
+
+/* 回覆氣泡裡的按鈕（前往申請理賠、重新傳送） */
+.action-btn {
+  display: block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: 16px;
+  color: #fff;
+  background: #00A48C;
+  border: none;
+  border-radius: 999px;
+}
+.action-btn:hover {
+  filter: brightness(0.92);
+}
+.bubble.error .action-btn {
+  background: #a12b20;
+}
+
+/* 氣泡裡的選項按鈕（例如選擇理賠類型） */
+.chips-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* 快捷問題：margin-left = 機器人頭像寬度 + 間距（50 + 20），讓按鈕對齊氣泡 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: 70px;
+}
+.chip {
+  padding: 8px 18px;
+  font-size: 16px;
+  color: #00A48C;
+  background: #fff;
+  border: 1.5px solid var(--teal);
+  border-radius: 999px;
+}
+.chip:hover:not(:disabled) {
+  background: #e6f6f3;
+}
+.chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 輸入列 ===== */
+.composer {
+  display: flex;
+  gap: 16px;
+  padding: 0 36px 24px;
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+  box-sizing: border-box;
+  padding: 0 24px;
+  font: inherit;
+  font-size: 17px;
+  background: #fff;
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 輸入框提示文字 */
+.composer input::placeholder {
+  color: #767676;
+}
+
+.send-btn {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 56px;
+  color: #fff;
+  background: var(--teal);
+  border: none;
+  border-radius: 14px;
+}
+
+.send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 確認對話框（取代瀏覽器內建的 confirm） */
+.dialog {
+  width: min(400px, calc(100vw - 32px));
+  padding: 0;
+  font-family: inherit;
+  color: var(--text);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+.dialog-body {
+  padding: 28px 28px 24px;
+}
+.dialog-title {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+.dialog-message {
+  margin: 0 0 24px;
+  line-height: 1.6;
+  color: #444;
+  word-break: break-word;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.dialog-btn {
+  padding: 10px 22px;
+  font-size: 16px;
+  color: var(--text);
+  background: #fff;
+  border: 1.5px solid #c9c9c9;
+  border-radius: 999px;
+}
+.dialog-btn:hover {
+  background: #f5f5f5;
+}
+.dialog-btn.danger {
+  color: #fff;
+  background: #b3261e;
+  border-color: #b3261e;
+}
+.dialog-btn.danger:hover {
+  background: #9c2019;
+}
+
+/* ===== 手機：側邊欄改為滿版，避免擠壓對話區 =====
+   放在最後，確保能覆蓋上面同權重的規則 */
+@media (max-width: 720px) {
+  .app {
+    position: relative;
+  }
+  .sidebar {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    flex: none;
+  }
+  .messages {
+    padding: 56px 16px 16px;
+  }
+  .composer {
+    padding: 0 16px 16px;
+  }
+  .bubble {
+    max-width: 85%;
+  }
+}
