@@ -1,0 +1,6 @@
+Actual \ Predicted,list_user_policies,claim_required_documents,start_claim,redirect_to_human,unknown
+list_user_policies,3,0,0,0,0
+claim_required_documents,0,3,0,0,0
+start_claim,0,0,3,0,0
+redirect_to_human,0,0,0,3,0
+unknown,0,0,0,0,3

@@ -54,6 +54,7 @@ const router = Router();
  *                     - $ref: '#/components/schemas/ClaimRequirementsResponseDTO'
  *                     - $ref: '#/components/schemas/StartClaimResponseDTO'
  *                     - $ref: '#/components/schemas/UnknownIntentResponseDTO'
+ *                     - $ref: '#/components/schemas/RedirectToHumanResponseDTO'
  *                 meta:
  *                   $ref: '#/components/schemas/ApiSuccessMeta'
  *       400:

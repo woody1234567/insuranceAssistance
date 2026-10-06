@@ -8,8 +8,17 @@ export type UnknownIntentResponseDTO = {
   data: Record<string, never>;
 };
 
+export type RedirectToHumanResponseDTO = {
+  type: "text";
+  intent: "redirect_to_human";
+  content: string;
+  data: Record<string, never>;
+};
+
 export type AssistantResponseDTO =
   | PolicyResponseDTO
   | ClaimRequirementsResponseDTO
   | StartClaimResponseDTO
-  | UnknownIntentResponseDTO;
+  | UnknownIntentResponseDTO
+  | RedirectToHumanResponseDTO;
+

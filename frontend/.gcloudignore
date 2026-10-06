@@ -1,0 +1,17 @@
+.gcloudignore
+.git
+.gitignore
+
+# 不要上傳編譯產物與依賴套件（Cloud Build 會自己在容器中執行 npm ci）
+node_modules/
+dist/
+dist-ssr/
+
+# 編輯器與暫存檔案
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

@@ -53,6 +53,9 @@
 - [05. GCP Cloud Run 容器化與部署規範](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/05-deployment.md)
   - Multi-stage Dockerfile 最佳實踐
   - Cloud Run 服務配置、Cloud SQL Auth Proxy 連線、Secret Manager 整合
+- [06. AI 意圖評估框架與驗證準則 (evaluation.md)](file:///home/woody/small_projects/insuranceAssistance/spec/devPrincipal/evaluation.md)
+  - 獨立評估架構、125 筆真實意圖資料集
+  - Confusion Matrix、Precision、Recall、F1-score、穩定性指標與 Prompt A/B 測試
 
 ---
 
