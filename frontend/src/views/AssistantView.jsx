@@ -11,6 +11,7 @@ const GREETING = "親愛的顧客您好，很高興為您服務";
 const QUICK_QUESTIONS = [
   { label: "查詢我的保單", text: "我想知道我有幾張保單" },
   { label: "理賠需要哪些文件", text: "理賠需要準備哪些文件？" },
+  { label: "理賠申請", text: "我想要申請理賠" },
 ];
 
 export default function AssistantView() {
@@ -52,13 +53,30 @@ export default function AssistantView() {
   const assistantRow = (
     text,
     key,
-    { isError, policies, followUps, isLast } = {},
+    { isError, policies, followUps, links, link, isLast } = {},
   ) => (
     <div key={key} className="row assistant">
       <RobotIcon className="avatar" />
       <div className={`bubble ${isError ? "error" : ""}`}>
         {text}
         {policies && <PolicyList policies={policies} />}
+        {/* link 是舊版訊息（瀏覽器裡已存的紀錄）用的欄位，保留相容 */}
+        {(links ?? (link ? [{ ...link, label: `${link.label} ↗` }] : [])).length >
+          0 && (
+          <div className="link-row">
+            {(links ?? [{ ...link, label: `${link.label} ↗` }]).map((l) => (
+              <a
+                key={l.url}
+                className={`action-btn ${l.secondary ? "secondary" : ""}`}
+                href={l.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )}
         {followUps && isLast && !isLoading && (
           <div className="chips-inline">
             {followUps.map((f) => (

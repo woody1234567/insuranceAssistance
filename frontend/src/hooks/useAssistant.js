@@ -9,13 +9,23 @@ const STORAGE_KEY = "conversations";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // 後端要求補充理賠類型時，提供的選項
-const CLAIM_TYPES = ["住院", "意外", "手術", "旅遊意外"];
+const CLAIM_TYPES = ["住院", "意外", "手術"];
+
+// 「申請理賠」要前往的官方網站頁面
+const CLAIM_FORM_URL = "https://www.mli.com.tw/sites/mliportal/service/pdf-claims";
+
+// 理賠申請書 PDF（官方網站上的檔案連結）
+// const CLAIM_FORM_PDF =
+//   "https://www.mli.com.tw/sites/Satellite?blobcol=urldata&blobkey=id&blobtable=MungoBlobs&blobwhere=1555089070739&ssbinary=true";
 
 // 後端目前沒有「歷史對話」API，所以先存在瀏覽器 localStorage
-// 訊息格式：{ role, text, isError?, retryText?, policies?, followUps? }
+// 訊息格式：{ role, text, isError?, retryText?, policies?, followUps?, links? }
 function load() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    return Array.isArray(data)
+      ? data.filter((c) => c && typeof c.id === "string" && Array.isArray(c.messages))
+      : [];
   } catch {
     return [];
   }
@@ -35,10 +45,12 @@ export function useAssistant() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (isLoading) return; // 逐字輸出期間不寫入，結束後才存
     localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
-  }, [conversations]);
+  }, [conversations, isLoading]);
 
-  const active = conversations.find((c) => c.id === activeId) ?? conversations[0];
+  const active =
+    conversations.find((c) => c.id === activeId) ?? conversations[0];
 
   // 修改指定對話的訊息（用 id 指定，避免打字途中切換對話寫錯地方）
   const updateMessages = (id, fn) =>
@@ -56,6 +68,7 @@ export function useAssistant() {
 
   // 收到回應後，才新增系統訊息並一個字一個字顯示
   async function typeOut(id, text) {
+    text = String(text ?? "");
     updateMessages(id, (m) => [...m, { role: "assistant", text: "" }]);
     for (const ch of text) {
       updateMessages(id, (m) => {
@@ -75,6 +88,10 @@ export function useAssistant() {
       const res = await postAssistantMessage(userText);
 
       if (res.type === "text") {
+        if (res.intent === "redirect_to_human") {
+          await typeOut(id, res.content || "我無法回答您這項問題，請您尋求專人服務。");
+          return;
+        }
         const policies =
           res.intent === "list_user_policies" ? res.data?.policies : null;
         if (policies?.length) {
@@ -83,8 +100,23 @@ export function useAssistant() {
         } else {
           await typeOut(id, res.content);
         }
+      } else if (res.intent === "start_claim") {
+        // 後端回傳的是「跳轉到 /claims/apply」，但這個頁面並不存在。
+        // 改成：有可申請的保單時，提供前往官方網站的連結，由使用者自己點開。
+        const ids = res.payload?.params?.availablePolicyIds;
+        if (Array.isArray(ids) && ids.length === 0) {
+          await typeOut(id, res.message); // 沒有有效保單：照後端的說明顯示
+        } else {
+          await typeOut(id, "理賠申請請至官方網站辦理，請點選下方按鈕前往");
+          attachToLast(id, {
+            links: [
+              { label: "前往理賠專區 ↗", url: CLAIM_FORM_URL },
+              // { label: "理賠申請書 (PDF)", url: CLAIM_FORM_PDF, secondary: true },
+            ],
+          });
+        }
       } else {
-        // 其他類型的回應（例如後端要求跳轉頁面）：前端不處理跳轉，只顯示後端的文字
+        // 其他類型的回應：只顯示後端的文字
         await typeOut(id, res.message ?? "抱歉，我暫時無法處理這個要求。");
       }
     } catch (err) {
@@ -115,6 +147,7 @@ export function useAssistant() {
   }
 
   async function sendMessage(userText) {
+    if (isLoading) return;
     const id = active.id;
     setConversations((prev) =>
       prev.map((c) =>

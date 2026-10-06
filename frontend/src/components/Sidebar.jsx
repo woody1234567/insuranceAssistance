@@ -99,7 +99,7 @@ export default function Sidebar({
                 className="rename-input"
                 autoFocus
                 value={draft}
-                maxLength={30}
+                maxLength={16}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={handleRenameKeyDown}
                 onBlur={commitRename}

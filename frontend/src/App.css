@@ -98,7 +98,7 @@ input:focus-visible {
 .history {
   flex: 1;
   overflow-y: auto;
-  margin: 12px 0 0;
+  margin: 12px 0 12px;
   padding: 0;
   list-style: none;
 }
@@ -452,3 +452,35 @@ input:focus-visible {
     max-width: 85%;
   }
 }
+
+a.action-btn {
+  width: fit-content;
+  text-decoration: none;
+}
+
+/* 並排的連結按鈕 */
+/* .link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.link-row .action-btn {
+  margin-top: 0;
+} */
+
+/* <a> 標籤預設有底線 */
+/* a.action-btn {
+  text-decoration: none;
+} */
+
+/* 次要按鈕（白底綠框），用來和主要按鈕區分 */
+/* .action-btn.secondary {
+  color: #00796b;
+  background: #fff;
+  border: 1.5px solid #00796b;
+}
+.action-btn.secondary:hover {
+  background: #e6f6f3;
+  filter: none;
+} */
