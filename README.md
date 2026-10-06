@@ -20,6 +20,7 @@
 - [快速開始](#-快速開始)
   - [本機開發與測試](#1-啟動本機-mysql-資料庫)
   - [GCP Cloud Run 雲端部署](#3-️-gcp-cloud-run-雲端部署)
+- [AI 意圖評估與量化驗證 (Evaluation)](#-ai-意圖評估與量化驗證-intent-classifier-evaluation)
 - [相關規格與開發準則文件](#-相關規格與開發準則文件)
 
 ---
@@ -299,11 +300,18 @@ insuranceAssistance/
 │   │   ├── repositories/     # 資料存取層 Repository (Drizzle ORM 防注入)
 │   │   ├── templates/        # 回應與動作模板 (Response & Action Templates)
 │   │   ├── ai/               # 意圖分類器 (Vercel AI SDK) 與路由器 (Intent Router)
+│   │   │   └── prompts/      # 版本化 System Prompts (V1, V2)
 │   │   ├── middlewares/      # 身分認證 (requireAuth)、Zod 驗證與全域錯誤攔截
 │   │   ├── models/           # DTO 型別定義
 │   │   ├── utils/            # AppError, ApiResponse, Logger
 │   │   ├── app.ts            # Express 應用設定與中介層掛載
 │   │   └── index.ts          # 伺服器啟動與優雅關機
+│   ├── evaluation/           # 獨立 AI 意圖評估框架 (純函式量化評估)
+│   │   ├── datasets/         # 125 筆人工標註多樣性資料集 (intent-test-cases.json)
+│   │   ├── types.ts          # 評估資料模型與型別定義
+│   │   ├── metrics.ts        # Precision/Recall/F1/Confusion Matrix 計算模組
+│   │   ├── evaluate.ts       # CLI 執行工具 (支援多輪穩定性、抽樣與 A/B 測試)
+│   │   └── results/          # 自動匯出報表 (latest-summary.md, csv, json)
 │   ├── tests/                # 單元測試與整合測試
 │   ├── drizzle.config.ts     # Drizzle Kit 設定檔
 │   ├── Dockerfile            # AP Server Multi-stage Dockerfile
@@ -334,7 +342,8 @@ insuranceAssistance/
 │   │   ├── 02-backend.md     # 後端規範 (TypeScript, Express & Drizzle ORM)
 │   │   ├── 03-frontend.md    # 前端規範 (React)
 │   │   ├── 04-database.md    # 資料庫設計與版控規範 (MySQL)
-│   │   └── 05-deployment.md  # 容器化與 GCP Cloud Run 部署規範
+│   │   ├── 05-deployment.md  # 容器化與 GCP Cloud Run 部署規範
+│   │   └── evaluation.md     # AI 意圖評估框架設計與驗證規範
 │   └── APIDesign/
 │       └── v1.md             # v1 API 時序圖規格
 └── README.md                 # 專案總覽文件
@@ -434,6 +443,44 @@ gcloud run deploy insurance-web-server \
 
 ---
 
+## 🧪 AI 意圖評估與量化驗證 (Intent Classifier Evaluation)
+
+為了確保 Gemini 模型在自然語言理解時的準確率與穩定性，本專案建立了一套**獨立、純函式型態的意圖評估框架**（位於 `backend/evaluation/`）。該框架完全解耦 Express API、資料庫與外部業務邏輯，專注於量化評估 AI 意圖識別效能。
+
+### 核心特性
+- **獨立純函式評估**：直接呼叫 `VercelIntentClassifier.classify(text)`，完全不啟動 HTTP 伺服器或存取資料庫。
+- **125 筆真實多樣性標註資料集 (`intent-test-cases.json`)**：平衡涵蓋 5 大生產意圖（`list_user_policies`、`claim_required_documents`、`start_claim`、`redirect_to_human`、`unknown`），刻意納入標準句、極短句（如「我要賠」）、口語同音錯字（如「保但」）、邊界易混淆句與離題問候。
+- **全方位量化指標**：
+  - **Confusion Matrix（混淆矩陣）**：分析意圖之間的混淆邊界。
+  - **Precision、Recall、F1-Score**：細分各類別表現，並計算 Macro Average 與 Weighted Average。
+  - **次分類準確率 (ClaimType)**：評估理賠文件細項（住院 / 意外 / 手術）的提取正確度。
+  - **多輪穩定度一致率 (Multi-run Stability)**：針對同一個測試語句連續執行多次，量化生成式模型的一致性。
+- **Prompt A/B 測試支援**：透過版本化 System Prompt，成功發現 V1 因文字定義重疊使 `unknown` 誤判為 `redirect_to_human`，改進至 V2 後實測準確率提升至 **100.0%**。
+
+### 常用評估指令 (`backend/`)
+
+```bash
+# 1. 執行標準評估（全量 125 筆資料集）
+pnpm eval:intent
+
+# 2. 分層抽樣快速驗證（抽取各類別平均共 20 筆）
+pnpm eval:intent --limit 20
+
+# 3. 多輪模型推論穩定度評估（每個 Case 重複測試 3 次）
+pnpm eval:intent:stability --limit 10
+
+# 4. 指定 Prompt 版本進行 A/B 測試
+pnpm eval:intent --prompt v1 --limit 10
+pnpm eval:intent --prompt v2 --limit 10
+```
+
+每次執行完畢後，報表將自動輸出至 `backend/evaluation/results/`：
+- `latest-summary.md`：包含指標表格、混淆矩陣與錯誤案例清單 (Bad Cases) 的 Markdown 總覽。
+- `latest-confusion-matrix.csv`：混淆矩陣 CSV 檔，方便匯入試算表製圖。
+- `latest-result.json`：結構化評估結果原始資料。
+
+---
+
 ## 📖 相關規格與開發準則文件
 
 - **開發準則 (spec/devPrincipal)**：
@@ -443,6 +490,7 @@ gcloud run deploy insurance-web-server \
   - [03. 前端開發規範 (React)](spec/devPrincipal/03-frontend.md)
   - [04. 資料庫設計與版控規範 (MySQL & db/)](spec/devPrincipal/04-database.md)
   - [05. 容器化與 GCP Cloud Run 部署規範](spec/devPrincipal/05-deployment.md)
+  - [06. AI 意圖評估框架與驗證準則](spec/devPrincipal/evaluation.md)
 - **資料庫管理 (db)**：
   - [資料庫結構與種子資料指南](db/README.md)
 - **API 設計規格**：

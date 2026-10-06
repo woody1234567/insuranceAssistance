@@ -1,0 +1,897 @@
+[
+  {
+    "id": "POL-001",
+    "text": "請問我現在有幾張有效保單？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-002",
+    "text": "我想查詢我名下的所有保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-003",
+    "text": "可以幫我列出我的保險清單嗎？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-004",
+    "text": "查看保單",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "POL-005",
+    "text": "保單數量",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "POL-006",
+    "text": "查保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "POL-007",
+    "text": "我有保哪些險？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-008",
+    "text": "我到底買過幾張保單啊",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-009",
+    "text": "看一下我有買什麼保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-010",
+    "text": "我想確認一下我的保單內容跟張數",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-011",
+    "text": "我身上有哪幾張保單還有效？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-012",
+    "text": "幫我查我有多少張保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-013",
+    "text": "我手上買了幾份保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-014",
+    "text": "我想看我的全部保單",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-015",
+    "text": "查一下我目前投保的項目",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-016",
+    "text": "我有幾份保單呢？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-017",
+    "text": "查詢保但清單",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "typo"
+  },
+  {
+    "id": "POL-018",
+    "text": "我看下我的保單",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "typo"
+  },
+  {
+    "id": "POL-019",
+    "text": "我有買甚麼保險",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "typo"
+  },
+  {
+    "id": "POL-020",
+    "text": "我有保險嗎？我想看看",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-021",
+    "text": "能不能幫我調出我的投保紀錄",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-022",
+    "text": "我想了解我自己目前擁有的保險份數",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-023",
+    "text": "我名下有保險嗎？",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "POL-024",
+    "text": "查看我的保險總覽",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "POL-025",
+    "text": "查保險合約數量",
+    "expectedIntent": "list_user_policies",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+
+  {
+    "id": "DOC-HOSP-001",
+    "text": "住院理賠需要準備哪些文件？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-HOSP-002",
+    "text": "住醫院要申請保險給付，需要附什麼證明？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-HOSP-003",
+    "text": "住院醫療理賠要帶什麼資料去辦？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-HOSP-004",
+    "text": "住院理賠文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "short"
+  },
+  {
+    "id": "DOC-HOSP-005",
+    "text": "我上週生病住院了，要申請理賠需要診斷證明書嗎？還要哪些？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-HOSP-006",
+    "text": "住加護病房理賠要準備什麼東西？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-HOSP-007",
+    "text": "住院病房費要理賠，收據要正本還是影本？需要哪些資料？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-HOSP-008",
+    "text": "住院理賠需要甚麼紙本文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "typo"
+  },
+  {
+    "id": "DOC-HOSP-009",
+    "text": "住原要準備啥理賠文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "typo"
+  },
+  {
+    "id": "DOC-HOSP-010",
+    "text": "出院了，辦理醫療住院理賠必備文件清單有哪些？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-HOSP-011",
+    "text": "急診後轉住院，理賠文件有哪些規定？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "hospitalization",
+    "category": "colloquial"
+  },
+
+  {
+    "id": "DOC-ACC-001",
+    "text": "車禍受傷意外理賠要準備什麼文件？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-ACC-002",
+    "text": "意外險理賠需要附哪些資料？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-ACC-003",
+    "text": "意外傷害申請理賠需要警察局三聯單嗎？還要準備什麼？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-ACC-004",
+    "text": "意外理賠文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "short"
+  },
+  {
+    "id": "DOC-ACC-005",
+    "text": "跌倒骨折意外理賠要帶啥",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-ACC-006",
+    "text": "車禍理賠要帶什麼資料才能審核？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-ACC-007",
+    "text": "騎車雷殘意外險申請要哪些證明？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-ACC-008",
+    "text": "意外傷害醫療費用理賠應備文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-ACC-009",
+    "text": "意外受傷理陪要準備什麼",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "typo"
+  },
+  {
+    "id": "DOC-ACC-010",
+    "text": "出車禍申請保險要交什麼給保險公司？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-ACC-011",
+    "text": "骨折意外申請文件有哪些",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "accident",
+    "category": "short"
+  },
+
+  {
+    "id": "DOC-SURG-001",
+    "text": "門診手術理賠需要哪些文件？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-SURG-002",
+    "text": "開刀手術保險理賠需要附什麼證明？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-SURG-003",
+    "text": "動手術理賠要準備診斷證明嗎？還有其他東西嗎？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-SURG-004",
+    "text": "手術理賠文件",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "short"
+  },
+  {
+    "id": "DOC-SURG-005",
+    "text": "微創手術申請理賠要帶哪些資料？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-SURG-006",
+    "text": "做白內障手術要申請保險要付哪些文件？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-SURG-007",
+    "text": "外科手術理賠需備文件明細",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "standard"
+  },
+  {
+    "id": "DOC-SURG-008",
+    "text": "開刀理陪要準備什麼資料",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "typo"
+  },
+  {
+    "id": "DOC-SURG-009",
+    "text": "手數理賠文件有哪些",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "typo"
+  },
+  {
+    "id": "DOC-SURG-010",
+    "text": "門診動手術要理賠需要準備收據明細嗎？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "colloquial"
+  },
+  {
+    "id": "DOC-SURG-011",
+    "text": "開刀手術保險金申請所需證明文件清單",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": "surgery",
+    "category": "standard"
+  },
+
+  {
+    "id": "CLM-001",
+    "text": "我要申請理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "DOC-AMB-001",
+    "text": "理賠要準備什麼才能申請？",
+    "expectedIntent": "claim_required_documents",
+    "expectedClaimType": null,
+    "category": "ambiguous"
+  },
+  {
+    "id": "CLM-002",
+    "text": "我想辦理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-003",
+    "text": "我要報出險",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-004",
+    "text": "開始申請理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-005",
+    "text": "我要賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "CLM-006",
+    "text": "申請理賠流程",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "CLM-007",
+    "text": "請帶我去申請理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-008",
+    "text": "我要填寫理賠申請書",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-009",
+    "text": "我現在要提出理賠手續",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-010",
+    "text": "我要辦理理賠送件",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-011",
+    "text": "可以幫我開始理賠程序嗎？",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-012",
+    "text": "我要申請保險金",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-013",
+    "text": "我要申辦理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-014",
+    "text": "我要辦理理陪",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "typo"
+  },
+  {
+    "id": "CLM-015",
+    "text": "我要裡賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "typo"
+  },
+  {
+    "id": "CLM-016",
+    "text": "開始理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "CLM-017",
+    "text": "帶我進入理賠申辦頁面",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-018",
+    "text": "我準備好文件了，現在要申請理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "ambiguous"
+  },
+  {
+    "id": "CLM-019",
+    "text": "我要線上申請理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-020",
+    "text": "我想開啟理賠申請案",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "CLM-021",
+    "text": "馬上辦理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-022",
+    "text": "我受傷了，想立刻申請保險理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-023",
+    "text": "我生病剛出院，現在想直接辦理賠",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "CLM-024",
+    "text": "請協助我發起理賠申請",
+    "expectedIntent": "start_claim",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+
+  {
+    "id": "HUM-001",
+    "text": "轉接真人客服",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "HUM-002",
+    "text": "幫我找專人協助",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "HUM-003",
+    "text": "找真人",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "HUM-004",
+    "text": "我想跟人工客服通話",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "HUM-005",
+    "text": "我要變更保單的通訊地址與手機號碼",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-006",
+    "text": "我想辦理保單借款，利率是多少？",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-007",
+    "text": "我要更改信用卡扣款帳號",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-008",
+    "text": "我想把保單解約退保",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-009",
+    "text": "我要投保新的重大傷病險，你們有推薦的方案嗎？",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-010",
+    "text": "你們理賠金額算錯了，我要申訴爭議！",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-011",
+    "text": "我要更換保單受益人名字",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-012",
+    "text": "我媽媽想加保防癌險，可以請業務員聯絡我嗎？",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-013",
+    "text": "請問我的保費自動扣款失敗該怎麼辦？",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-014",
+    "text": "我想申請展期定期保險或減額繳清",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-015",
+    "text": "機器人回答太爛了，叫你們主管出來",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "colloquial"
+  },
+  {
+    "id": "HUM-016",
+    "text": "我想找負責我這區的業務員",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-017",
+    "text": "轉專人",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "short"
+  },
+  {
+    "id": "HUM-018",
+    "text": "我要變更繳費年期",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-019",
+    "text": "保費收據重開要去哪裡辦？",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-020",
+    "text": "請轉人工服務台",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "standard"
+  },
+  {
+    "id": "HUM-021",
+    "text": "保險糾紛該找誰處理",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+  {
+    "id": "HUM-022",
+    "text": "我要諮詢海外急難救助條款細節",
+    "expectedIntent": "redirect_to_human",
+    "expectedClaimType": null,
+    "category": "unsupported_service"
+  },
+
+  {
+    "id": "UNK-001",
+    "text": "今天台北天氣如何？會下雨嗎？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-002",
+    "text": "你好，請問你是誰？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-003",
+    "text": "哈囉！早安！",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-004",
+    "text": "你可以幫我寫一首關於秋天的詩嗎？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-005",
+    "text": "1 + 1 等於多少？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-006",
+    "text": "推薦我台北好吃的拉麵店",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-007",
+    "text": "今天台積電股票表現怎麼樣？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-008",
+    "text": "asdfghjk",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-009",
+    "text": "？？？？？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-010",
+    "text": "講個笑話給我聽吧",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-011",
+    "text": "掰掰，謝謝你",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-012",
+    "text": "你叫什麼名字？你可以做什麼？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-013",
+    "text": "幫我把這段英文翻譯成中文：The weather is nice today.",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-014",
+    "text": "你知道地球到月球有多遠嗎？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-015",
+    "text": "現在幾點了？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-016",
+    "text": "嗨，測試一下系統",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-017",
+    "text": "明天放颱風假嗎？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-018",
+    "text": "讚喔！",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-019",
+    "text": "午安",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-020",
+    "text": "可以幫我寫一段 Python 程式碼嗎？",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  },
+  {
+    "id": "UNK-021",
+    "text": "哈哈哈笑死",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "chitchat"
+  },
+  {
+    "id": "UNK-022",
+    "text": ".......",
+    "expectedIntent": "unknown",
+    "expectedClaimType": null,
+    "category": "out_of_domain"
+  }
+]

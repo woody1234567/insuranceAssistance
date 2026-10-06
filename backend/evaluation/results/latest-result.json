@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-10-06T01:52:33.810Z",
+  "model": "gemini-3.5-flash-lite",
+  "totalCases": 5,
+  "totalEvaluated": 15,
+  "failedCalls": 0,
+  "overallAccuracy": 1,
+  "claimTypeAccuracy": {
+    "totalDocsCases": 3,
+    "correctDocsCases": 3,
+    "accuracy": 1
+  },
+  "macroMetrics": {
+    "precision": 1,
+    "recall": 1,
+    "f1": 1
+  },
+  "weightedMetrics": {
+    "precision": 1,
+    "recall": 1,
+    "f1": 1
+  },
+  "intentMetrics": {
+    "list_user_policies": {
+      "intent": "list_user_policies",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "totalActual": 3,
+      "totalPredicted": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "claim_required_documents": {
+      "intent": "claim_required_documents",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "totalActual": 3,
+      "totalPredicted": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "start_claim": {
+      "intent": "start_claim",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "totalActual": 3,
+      "totalPredicted": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "redirect_to_human": {
+      "intent": "redirect_to_human",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "totalActual": 3,
+      "totalPredicted": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "unknown": {
+      "intent": "unknown",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 12,
+      "totalActual": 3,
+      "totalPredicted": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "confusionMatrix": {
+    "labels": [
+      "list_user_policies",
+      "claim_required_documents",
+      "start_claim",
+      "redirect_to_human",
+      "unknown"
+    ],
+    "matrix": {
+      "list_user_policies": {
+        "list_user_policies": 3,
+        "claim_required_documents": 0,
+        "start_claim": 0,
+        "redirect_to_human": 0,
+        "unknown": 0
+      },
+      "claim_required_documents": {
+        "list_user_policies": 0,
+        "claim_required_documents": 3,
+        "start_claim": 0,
+        "redirect_to_human": 0,
+        "unknown": 0
+      },
+      "start_claim": {
+        "list_user_policies": 0,
+        "claim_required_documents": 0,
+        "start_claim": 3,
+        "redirect_to_human": 0,
+        "unknown": 0
+      },
+      "redirect_to_human": {
+        "list_user_policies": 0,
+        "claim_required_documents": 0,
+        "start_claim": 0,
+        "redirect_to_human": 3,
+        "unknown": 0
+      },
+      "unknown": {
+        "list_user_policies": 0,
+        "claim_required_documents": 0,
+        "start_claim": 0,
+        "redirect_to_human": 0,
+        "unknown": 3
+      }
+    }
+  },
+  "badCases": [],
+  "stability": {
+    "totalCases": 5,
+    "consistentCases": 5,
+    "consistencyRate": 1,
+    "caseConsistency": [
+      {
+        "id": "CLM-001",
+        "text": "我要申請理賠",
+        "expected": "start_claim",
+        "predictions": [
+          "start_claim",
+          "start_claim",
+          "start_claim"
+        ],
+        "isFullyConsistent": true
+      },
+      {
+        "id": "DOC-HOSP-001",
+        "text": "住院理賠需要準備哪些文件？",
+        "expected": "claim_required_documents",
+        "predictions": [
+          "claim_required_documents",
+          "claim_required_documents",
+          "claim_required_documents"
+        ],
+        "isFullyConsistent": true
+      },
+      {
+        "id": "POL-001",
+        "text": "請問我現在有幾張有效保單？",
+        "expected": "list_user_policies",
+        "predictions": [
+          "list_user_policies",
+          "list_user_policies",
+          "list_user_policies"
+        ],
+        "isFullyConsistent": true
+      },
+      {
+        "id": "UNK-001",
+        "text": "今天台北天氣如何？會下雨嗎？",
+        "expected": "unknown",
+        "predictions": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ],
+        "isFullyConsistent": true
+      },
+      {
+        "id": "HUM-001",
+        "text": "轉接真人客服",
+        "expected": "redirect_to_human",
+        "predictions": [
+          "redirect_to_human",
+          "redirect_to_human",
+          "redirect_to_human"
+        ],
+        "isFullyConsistent": true
+      }
+    ]
+  },
+  "averageLatencyMs": 1195
+}
