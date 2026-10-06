@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAssistant } from "../hooks/useAssistant";
 import { ChevronsRight, RobotIcon, SendIcon } from "../components/Icons";
 import PolicyList from "../components/PolicyList";
@@ -14,6 +15,7 @@ const QUICK_QUESTIONS = [
 ];
 
 export default function AssistantView() {
+  const navigate = useNavigate();
   const {
     conversations,
     activeId,
@@ -52,13 +54,21 @@ export default function AssistantView() {
   const assistantRow = (
     text,
     key,
-    { isError, policies, followUps, isLast } = {},
+    { isError, policies, followUps, redirectToHuman, isLast } = {},
   ) => (
     <div key={key} className="row assistant">
       <RobotIcon className="avatar" />
       <div className={`bubble ${isError ? "error" : ""}`}>
         {text}
         {policies && <PolicyList policies={policies} />}
+        {redirectToHuman && (
+          <button
+            className="action-btn redirect-btn"
+            onClick={() => navigate("/human-service")}
+          >
+            前往專人客服
+          </button>
+        )}
         {followUps && isLast && !isLoading && (
           <div className="chips-inline">
             {followUps.map((f) => (

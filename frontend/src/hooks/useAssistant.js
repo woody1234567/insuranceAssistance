@@ -78,6 +78,7 @@ export function useAssistant() {
       if (res.type === "text") {
         if (res.intent === "redirect_to_human") {
           await typeOut(id, res.content || "我無法回答您這項問題，請您尋求專人服務。");
+          attachToLast(id, { redirectToHuman: true });
           return;
         }
         const policies =
