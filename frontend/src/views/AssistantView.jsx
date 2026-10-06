@@ -63,8 +63,8 @@ export default function AssistantView() {
         {text}
         {policies && <PolicyList policies={policies} />}
         {/* link 是舊版訊息（瀏覽器裡已存的紀錄）用的欄位，保留相容 */}
-        {(links ?? (link ? [{ ...link, label: `${link.label} ↗` }] : [])).length >
-          0 && (
+        {(links ?? (link ? [{ ...link, label: `${link.label} ↗` }] : []))
+          .length > 0 && (
           <div className="link-row">
             {(links ?? [{ ...link, label: `${link.label} ↗` }]).map((l) => (
               <a
@@ -78,6 +78,7 @@ export default function AssistantView() {
               </a>
             ))}
           </div>
+        )}
         {redirectToHuman && (
           <button
             className="action-btn redirect-btn"
@@ -155,7 +156,10 @@ export default function AssistantView() {
 
           {messages.map((m, i) =>
             m.role === "assistant" ? (
-              assistantRow(m.text, i, { ...m, isLast: i === messages.length - 1 })
+              assistantRow(m.text, i, {
+                ...m,
+                isLast: i === messages.length - 1,
+              })
             ) : (
               <div key={i} className="row user">
                 <div className="bubble">{m.text}</div>
