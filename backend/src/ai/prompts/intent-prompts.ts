@@ -36,3 +36,29 @@ export const SYSTEM_PROMPT_V2 = `你是保險智慧助理的意圖分類器。�
    - 與保險完全無關的閒聊、問題（如天氣、算數、笑話、翻譯、寫程式、生活日常）。
    - 無意義亂碼、純符號或無法識別語意的話語。
    - claimType 請設為 null。`;
+
+export const INTENT_SYSTEM_PROMPTS = {
+  v1: SYSTEM_PROMPT_V1,
+  v2: SYSTEM_PROMPT_V2,
+} as const;
+
+export type IntentPromptVersion = keyof typeof INTENT_SYSTEM_PROMPTS;
+
+export const DEFAULT_PROMPT_VERSION: IntentPromptVersion = "v2";
+
+export function resolveIntentSystemPrompt(version?: string): string {
+  const raw = (version ?? DEFAULT_PROMPT_VERSION).trim().toLowerCase();
+  const normalizedKey = (raw.startsWith("v") ? raw : `v${raw}`) as IntentPromptVersion;
+  const prompt = INTENT_SYSTEM_PROMPTS[normalizedKey];
+
+  if (!prompt) {
+    const supported = Object.keys(INTENT_SYSTEM_PROMPTS).join(", ");
+    throw new Error(
+      `未知的 System Prompt 版本: "${version}"。支援的版本包括: ${supported}`,
+    );
+  }
+
+  return prompt;
+}
+
+

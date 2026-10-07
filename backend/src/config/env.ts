@@ -19,6 +19,15 @@ const envSchema = z.object({
 
   AI_PROVIDER: z.enum(["google-vertex", "google"]).default("google"),
   AI_MODEL: z.string().min(1).default("gemini-3.5-flash"),
+  AI_PROMPT_VERSION: z
+    .string()
+    .min(1)
+    .default(
+      process.env.AI_PROMPT_VERSION ??
+        process.env.SYSTEM_PROMPT_VERSION ??
+        "v2",
+    ),
+
   GOOGLE_VERTEX_PROJECT: z
     .string()
     .min(1)

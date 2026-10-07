@@ -19,6 +19,7 @@ import type {
 import {
   SYSTEM_PROMPT_V1,
   SYSTEM_PROMPT_V2,
+  resolveIntentSystemPrompt,
 } from "../src/ai/prompts/intent-prompts.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,14 +37,18 @@ interface CliOptions {
 
 function parseCliArgs(): CliOptions {
   const args = process.argv.slice(2);
+  const defaultPromptVersion =
+    env.AI_PROMPT_VERSION.toLowerCase().replace(/^v?/, "v") === "v1" ? "v1" : "v2";
+
   const options: CliOptions = {
     datasetPath: path.resolve(__dirname, "./datasets/intent-test-cases.json"),
     runs: 1,
     concurrency: 3,
     delayMs: 200,
     exportResults: true,
-    promptVersion: "v2",
+    promptVersion: defaultPromptVersion,
   };
+
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -295,9 +300,9 @@ async function main(): Promise<void> {
     testCases = sampled;
   }
 
-  const selectedPrompt =
-    options.promptVersion === "v1" ? SYSTEM_PROMPT_V1 : SYSTEM_PROMPT_V2;
+  const selectedPrompt = resolveIntentSystemPrompt(options.promptVersion);
   const classifier = new VercelIntentClassifier(undefined, selectedPrompt);
+
 
   const startTime = Date.now();
   const results = await runEvaluationPool(

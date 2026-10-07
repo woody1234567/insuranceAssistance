@@ -22,13 +22,25 @@ export interface IntentClassifier {
   classify(message: string): Promise<IntentClassification>;
 }
 
+import { env } from "../config/env.js";
 import {
   SYSTEM_PROMPT_V1,
   SYSTEM_PROMPT_V2,
+  INTENT_SYSTEM_PROMPTS,
+  resolveIntentSystemPrompt,
+  type IntentPromptVersion,
 } from "./prompts/intent-prompts.js";
 
-export const DEFAULT_INTENT_SYSTEM_PROMPT = SYSTEM_PROMPT_V2;
-export { SYSTEM_PROMPT_V1, SYSTEM_PROMPT_V2 };
+export const DEFAULT_INTENT_SYSTEM_PROMPT = resolveIntentSystemPrompt(
+  env.AI_PROMPT_VERSION,
+);
+export {
+  SYSTEM_PROMPT_V1,
+  SYSTEM_PROMPT_V2,
+  INTENT_SYSTEM_PROMPTS,
+  resolveIntentSystemPrompt,
+};
+export type { IntentPromptVersion };
 
 export class VercelIntentClassifier implements IntentClassifier {
   private readonly model: LanguageModel;
@@ -39,8 +51,14 @@ export class VercelIntentClassifier implements IntentClassifier {
     systemPromptOverride?: string,
   ) {
     this.model = model;
-    this.systemPrompt = systemPromptOverride ?? DEFAULT_INTENT_SYSTEM_PROMPT;
+    this.systemPrompt =
+      systemPromptOverride ?? resolveIntentSystemPrompt(env.AI_PROMPT_VERSION);
   }
+
+  public getSystemPrompt(): string {
+    return this.systemPrompt;
+  }
+
 
   public async classify(message: string): Promise<IntentClassification> {
     try {

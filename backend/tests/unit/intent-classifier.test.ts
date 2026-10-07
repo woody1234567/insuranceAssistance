@@ -87,5 +87,40 @@ describe("AI Model Provider & Intent Classifier", () => {
         new AppError("AI 意圖判斷服務暫時無法使用", 502, "AI_CLASSIFICATION_FAILED"),
       );
     });
+
+    it("uses default system prompt or custom system prompt override", async () => {
+      const defaultClassifier = new VercelIntentClassifier();
+      expect(defaultClassifier.getSystemPrompt()).toBeDefined();
+
+      const customPrompt = "你是自訂 prompt";
+      const customClassifier = new VercelIntentClassifier(undefined, customPrompt);
+      expect(customClassifier.getSystemPrompt()).toBe(customPrompt);
+    });
+  });
+
+  describe("System Prompt Versioning & Resolution", () => {
+    it("resolves v1 and v2 prompts correctly", async () => {
+      const { resolveIntentSystemPrompt, SYSTEM_PROMPT_V1, SYSTEM_PROMPT_V2 } =
+        await import("../../src/ai/prompts/index.js");
+
+      expect(resolveIntentSystemPrompt("v1")).toBe(SYSTEM_PROMPT_V1);
+      expect(resolveIntentSystemPrompt("v2")).toBe(SYSTEM_PROMPT_V2);
+      expect(resolveIntentSystemPrompt("1")).toBe(SYSTEM_PROMPT_V1);
+      expect(resolveIntentSystemPrompt("2")).toBe(SYSTEM_PROMPT_V2);
+      expect(resolveIntentSystemPrompt("V1")).toBe(SYSTEM_PROMPT_V1);
+      expect(resolveIntentSystemPrompt("V2")).toBe(SYSTEM_PROMPT_V2);
+      expect(resolveIntentSystemPrompt()).toBe(SYSTEM_PROMPT_V2);
+    });
+
+    it("throws error when invalid prompt version is specified", async () => {
+      const { resolveIntentSystemPrompt } = await import(
+        "../../src/ai/prompts/index.js"
+      );
+
+      expect(() => resolveIntentSystemPrompt("v99")).toThrow(
+        /未知的 System Prompt 版本/,
+      );
+    });
   });
 });
+
